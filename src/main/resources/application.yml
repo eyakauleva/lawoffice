@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lawoffice
+    username: postgres
+    password: system
+  sql:
+    init:
+      mode:
+        always
