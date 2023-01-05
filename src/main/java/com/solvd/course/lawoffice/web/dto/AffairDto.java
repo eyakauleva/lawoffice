@@ -16,6 +16,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class AffairDto {
     private Long id;
+    private UserDto user;
     private String name;
     private AffairStatus status;
     private String description;

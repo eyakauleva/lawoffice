@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,5 +16,5 @@ public class LawyerDto {
     private String description;
     private Float experience;
     private UserDto user;
-    private ServiceDto service;
+    private List<ServiceDto> services;
 }

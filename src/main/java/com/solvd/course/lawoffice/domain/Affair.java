@@ -15,6 +15,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class Affair {
     private Long id;
+    private User user;
     private String name;
     private String status;
     private String description;

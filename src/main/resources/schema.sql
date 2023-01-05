@@ -1,23 +1,16 @@
-	
-CREATE TABLE iF NOT EXISTS roles(
-	id BIGINT PRIMARY KEY,
-	name VARCHAR(45) UNIQUE NOT NULL
-);
 
 CREATE TABLE iF NOT EXISTS users(
-	id BIGINT PRIMARY KEY,
-	role_id BIGINT NOT NULL,
+	id BIGSERIAL PRIMARY KEY,
+	role VARCHAR(45) NOT NULL,
 	name VARCHAR(45) NOT NULL,
 	surname VARCHAR(45) NOT NULL,
 	email VARCHAR(45) NOT NULL,
 	phone VARCHAR(45) NOT NULL,
-	status VARCHAR(45) NOT NULL,
-	FOREIGN KEY (role_id)
-      REFERENCES roles (id)
+	status VARCHAR(45) NOT NULL
 );
 
 CREATE TABLE iF NOT EXISTS services(
-	id BIGINT PRIMARY KEY,
+	id BIGSERIAL PRIMARY KEY,
 	service_id BIGINT,
 	name VARCHAR(45) UNIQUE NOT NULL,
 	description VARCHAR(1000),
@@ -26,19 +19,16 @@ CREATE TABLE iF NOT EXISTS services(
 );
 
 CREATE TABLE iF NOT EXISTS lawyers(
-	id BIGINT PRIMARY KEY,
+	id BIGSERIAL PRIMARY KEY,
 	user_id BIGINT NOT NULL,
-	service_id BIGINT NOT NULL,
 	description VARCHAR(1000) NOT NULL,
 	experience REAL,
 	FOREIGN KEY (user_id)
-      REFERENCES users (id),
-	FOREIGN KEY (service_id)
-      REFERENCES services (id)
+      REFERENCES users (id)
 );
 
 CREATE TABLE iF NOT EXISTS consultations(
-	id BIGINT PRIMARY KEY,
+	id BIGSERIAL PRIMARY KEY,
 	lawyer_id BIGINT NOT NULL,
 	user_id BIGINT,
 	visit_time TIMESTAMP NOT NULL,
@@ -49,23 +39,32 @@ CREATE TABLE iF NOT EXISTS consultations(
 );
 
 CREATE TABLE iF NOT EXISTS reviews(
-	id BIGINT PRIMARY KEY,
+	id BIGSERIAL PRIMARY KEY,
 	user_id BIGINT NOT NULL,
 	description VARCHAR(1000) NOT NULL,
 	grade INT NOT NULL,
-	review_time TIMESTAMP NOT NULL,
+	review_time TIMESTAMP(3) NOT NULL,
 	FOREIGN KEY (user_id)
       REFERENCES users (id)
 );
 
 CREATE TABLE iF NOT EXISTS affairs(
-	id BIGINT PRIMARY KEY,
+	id BIGSERIAL PRIMARY KEY,
+	user_id BIGINT,
 	name VARCHAR(45) UNIQUE NOT NULL,
 	status VARCHAR(45) UNIQUE NOT NULL,
 	description VARCHAR(1000) UNIQUE NOT NULL,
 	start_date DATE NOT NULL,
 	end_date DATE,
-	price DECIMAL(10, 2)
+	price DECIMAL(10, 2),
+	FOREIGN KEY (user_id)
+       REFERENCES users (id)
+);
+
+CREATE TABLE iF NOT EXISTS lawyers_has_services (
+	lawyer_id BIGINT REFERENCES lawyers (id),
+	service_id BIGINT REFERENCES services (id),
+	CONSTRAINT lawyers_has_services_pkey PRIMARY KEY (lawyer_id, service_id)
 );
 
 CREATE TABLE iF NOT EXISTS affairs_has_lawyers (

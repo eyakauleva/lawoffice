@@ -1,5 +1,6 @@
 package com.solvd.course.lawoffice.web.dto;
 
+import com.solvd.course.lawoffice.domain.enums.Role;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,5 @@ public class UserDto {
     private String phone;
     private String email;
     private String status;
-    private RoleDto role;
+    private Role role;
 }

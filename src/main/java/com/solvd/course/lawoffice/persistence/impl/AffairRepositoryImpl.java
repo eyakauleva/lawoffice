@@ -36,7 +36,7 @@ public class AffairRepositoryImpl implements AffairRepository {
             st.setString(1, status.getValue());
             ResultSet rs = st.executeQuery();
             int count = 0;
-            if (rs.next()) {
+            while (rs.next()) {
                 count = rs.getInt("affairsCount");
             }
             rs.close();

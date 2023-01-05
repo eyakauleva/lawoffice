@@ -1,13 +1,11 @@
 package com.solvd.course.lawoffice.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class User {
     private Long id;
@@ -16,5 +14,11 @@ public class User {
     private String phone;
     private String email;
     private String status;
-    private Role role;
+    private String role;
+
+    public User(Long id, String name, String surname) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+    }
 }
