@@ -1,4 +1,4 @@
-package com.solvd.course.lawoffice.web.enums;
+package com.solvd.course.lawoffice.domain.enums;
 
 public enum UserStatus {
     ACTIVE,

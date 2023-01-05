@@ -16,4 +16,7 @@ public class AffairService {
     public Integer countSuccessAffairs(){
         return affairRepository.countSuccessAffairs();
     }
+    public Integer countFailureAffairs(){
+        return affairRepository.countFailureAffairs();
+    }
 }

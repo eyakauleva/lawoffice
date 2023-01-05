@@ -1,10 +1,10 @@
 	
-CREATE TABLE roles(
+CREATE TABLE iF NOT EXISTS roles(
 	id BIGINT PRIMARY KEY,
 	name VARCHAR(45) UNIQUE NOT NULL
 );
 
-CREATE TABLE users(
+CREATE TABLE iF NOT EXISTS users(
 	id BIGINT PRIMARY KEY,
 	role_id BIGINT NOT NULL,
 	name VARCHAR(45) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE users(
       REFERENCES roles (id)
 );
 
-CREATE TABLE services(
+CREATE TABLE iF NOT EXISTS services(
 	id BIGINT PRIMARY KEY,
 	service_id BIGINT,
 	name VARCHAR(45) UNIQUE NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE services(
       REFERENCES services (id)
 );
 
-CREATE TABLE lawyers(
+CREATE TABLE iF NOT EXISTS lawyers(
 	id BIGINT PRIMARY KEY,
 	user_id BIGINT NOT NULL,
 	service_id BIGINT NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE lawyers(
       REFERENCES services (id)
 );
 
-CREATE TABLE consultations(
+CREATE TABLE iF NOT EXISTS consultations(
 	id BIGINT PRIMARY KEY,
 	lawyer_id BIGINT NOT NULL,
 	user_id BIGINT,
@@ -48,7 +48,7 @@ CREATE TABLE consultations(
       REFERENCES users (id)
 );
 
-CREATE TABLE reviews(
+CREATE TABLE iF NOT EXISTS reviews(
 	id BIGINT PRIMARY KEY,
 	user_id BIGINT NOT NULL,
 	description VARCHAR(1000) NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE reviews(
       REFERENCES users (id)
 );
 
-CREATE TABLE affairs(
+CREATE TABLE iF NOT EXISTS affairs(
 	id BIGINT PRIMARY KEY,
 	name VARCHAR(45) UNIQUE NOT NULL,
 	status VARCHAR(45) UNIQUE NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE affairs(
 	price DECIMAL(10, 2)
 );
 
-CREATE TABLE affairs_has_lawyers (
+CREATE TABLE iF NOT EXISTS affairs_has_lawyers (
 	affair_id BIGINT REFERENCES affairs (id),
 	lawyer_id BIGINT REFERENCES lawyers (id),
 	CONSTRAINT affairs_has_lawyers_pkey PRIMARY KEY (affair_id, lawyer_id)

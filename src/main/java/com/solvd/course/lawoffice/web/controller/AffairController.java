@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/affairs")
 public class AffairController {
-    //TODO Количество выигранных и проигранных дел
-
     private final AffairService affairService;
 
     @Autowired
@@ -23,6 +21,11 @@ public class AffairController {
     @GetMapping("/success")
     public ResponseEntity<Integer> countSuccessAffairs(){
         Integer result = affairService.countSuccessAffairs();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @GetMapping("/failure")
+    public ResponseEntity<Integer> countFailureAffairs(){
+        Integer result = affairService.countFailureAffairs();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

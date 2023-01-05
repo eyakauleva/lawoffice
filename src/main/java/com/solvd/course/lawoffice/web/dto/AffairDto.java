@@ -1,6 +1,6 @@
 package com.solvd.course.lawoffice.web.dto;
 
-import com.solvd.course.lawoffice.web.enums.AffairStatus;
+import com.solvd.course.lawoffice.domain.enums.AffairStatus;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
