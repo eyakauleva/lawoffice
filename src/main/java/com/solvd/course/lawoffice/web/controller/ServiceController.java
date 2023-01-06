@@ -4,7 +4,7 @@ import com.solvd.course.lawoffice.domain.Service;
 import com.solvd.course.lawoffice.service.ServiceService;
 import com.solvd.course.lawoffice.web.dto.ServiceDto;
 import com.solvd.course.lawoffice.web.mapper.ServiceMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,29 +17,23 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/services")
+@RequiredArgsConstructor
 public class ServiceController {
-    //TODO Просмотреть предоставляемые услуги
-    //TODO Получить информацию по определенной услуге
     private final ServiceService serviceService;
     private final ServiceMapper serviceMapper;
 
-    @Autowired
-    public ServiceController(ServiceService serviceService, ServiceMapper serviceMapper) {
-        this.serviceService = serviceService;
-        this.serviceMapper = serviceMapper;
-    }
-
     @GetMapping
-    public ResponseEntity<List<ServiceDto>> getAllServices() {
-        List<Service> services = serviceService.getAllServices();
-        List<ServiceDto> serviceDtos = services.stream().map(serviceMapper::domainToDto)
+    public ResponseEntity<List<ServiceDto>> getAll() {
+        List<Service> services = serviceService.getAll();
+        List<ServiceDto> serviceDtos = services.stream()
+                .map(serviceMapper::domainToDto)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(serviceDtos, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceDto> getServiceById(@PathVariable("id") Long id) {
-        Service service = serviceService.getServiceById(id);
+    public ResponseEntity<ServiceDto> getById(@PathVariable("id") Long id) {
+        Service service = serviceService.getById(id);
         ServiceDto serviceDto = serviceMapper.domainToDto(service);
         return new ResponseEntity<>(serviceDto, HttpStatus.OK);
     }

@@ -20,4 +20,11 @@ public class Lawyer {
         this.id = id;
         this.user = user;
     }
+
+    public Lawyer(Long id, String description, Float experience, User user) {
+        this.id = id;
+        this.description = description;
+        this.experience = experience;
+        this.user = user;
+    }
 }

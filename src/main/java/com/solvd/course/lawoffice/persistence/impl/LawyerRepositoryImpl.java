@@ -1,6 +1,7 @@
 package com.solvd.course.lawoffice.persistence.impl;
 
 import com.solvd.course.lawoffice.domain.Lawyer;
+import com.solvd.course.lawoffice.domain.Service;
 import com.solvd.course.lawoffice.domain.User;
 import com.solvd.course.lawoffice.domain.exception.DaoException;
 import com.solvd.course.lawoffice.persistence.LawyerRepository;
@@ -13,41 +14,61 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
 public class LawyerRepositoryImpl implements LawyerRepository {
     private final DataSource dataSource;
+    private final static String SELECT_ALL_QUERY
+            = "select lawyers.id lawyer_id, lawyers.description lawyer_description, " +
+            "lawyers.experience lawyer_experience, users.id user_id, users.role user_role, " +
+            "users.name user_name, users.surname user_surname, users.email user_email, " +
+            "users.phone user_phone, users.status user_status, " +
+            "services.id service_id, services.service_id service_parent_id, " +
+            "services.name service_name, services.description service_description " +
+            "from lawyers " +
+            "inner join users on users.id = lawyers.user_id " +
+            "inner join lawyers_has_services on lawyers.id=lawyers_has_services.lawyer_id " +
+            "inner join services on lawyers_has_services.service_id = services.id;";
 
     @Override
-    public List<Lawyer> getAllLawyers() {
-        String SELECT_ALL_LAWYERS = "select \n" +
-                "lawyers.id lawyer_id, lawyers.description lawyer_description, lawyers.experience,\n" +
-                "users.id user_id, users.role, users.name user_name, \n" +
-                "\tusers.surname, users.email, users.phone, users.status\n" +
-                "\tfrom lawyers \n" +
-                "\tinner join users on users.id = lawyers.user_id \n" +
-                "\twhere users.status='ACTIVE' and users.role='LAWYER';";
+    public List<Lawyer> getAll() {
         try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(SELECT_ALL_LAWYERS)) {
+             ResultSet rs = st.executeQuery(SELECT_ALL_QUERY)) {
             List<Lawyer> lawyers = new ArrayList<>();
+            Long id = null;
+            Lawyer lawyer = null;
+            List<Service> services = new ArrayList<>();
             while (rs.next()) {
                 Long lawyerId = rs.getLong("lawyer_id");
-                String lawyerDescription = rs.getString("lawyer_description");
-                Float experience = rs.getFloat("experience");
-                Long userId = rs.getLong("user_id");
-                String role = rs.getString("role");
-                String userName = rs.getString("user_name");
-                String surname = rs.getString("surname");
-                String email = rs.getString("email");
-                String phone = rs.getString("phone");
-                String status = rs.getString("status");
-                User user = new User(userId, userName, surname, phone, email, status, role);
-                Lawyer lawyer = new Lawyer(lawyerId, lawyerDescription, experience, user, Collections.emptyList());
-                lawyers.add(lawyer);
+                if (Objects.isNull(id) || !id.equals(lawyerId)) {
+                    id = lawyerId;
+                    if (Objects.nonNull(lawyer)) {
+                        lawyer.setServices(services);
+                        lawyers.add(lawyer);
+                    }
+                    services = new ArrayList<>();
+                    String lawyerDescription = rs.getString("lawyer_description");
+                    Float experience = rs.getFloat("lawyer_experience");
+                    Long userId = rs.getLong("user_id");
+                    String role = rs.getString("user_role");
+                    String userName = rs.getString("user_name");
+                    String surname = rs.getString("user_surname");
+                    String email = rs.getString("user_email");
+                    String phone = rs.getString("user_phone");
+                    String status = rs.getString("user_status");
+                    User user = new User(userId, userName, surname, phone, email, status, role);
+                    lawyer = new Lawyer(lawyerId, lawyerDescription, experience, user);
+                }
+                Long serviceId = rs.getLong("service_id");
+                Long serviceParentId = rs.getLong("service_parent_id");
+                String serviceName = rs.getString("service_name");
+                String serviceDescription = rs.getString("service_description");
+                Service service = new Service(serviceId, serviceName, serviceDescription, new Service(serviceParentId));
+                services.add(service);
             }
             return lawyers;
         } catch (SQLException e) {

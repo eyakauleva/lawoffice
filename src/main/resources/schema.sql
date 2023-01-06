@@ -1,74 +1,79 @@
+CREATE SCHEMA IF NOT EXISTS law_office_schema;
 
 CREATE TABLE iF NOT EXISTS users(
-	id BIGSERIAL PRIMARY KEY,
+	id BIGSERIAL,
 	role VARCHAR(45) NOT NULL,
 	name VARCHAR(45) NOT NULL,
 	surname VARCHAR(45) NOT NULL,
 	email VARCHAR(45) NOT NULL,
 	phone VARCHAR(45) NOT NULL,
-	status VARCHAR(45) NOT NULL
+	status VARCHAR(45) NOT NULL,
+	PRIMARY KEY (id)
 );
 
 CREATE TABLE iF NOT EXISTS services(
-	id BIGSERIAL PRIMARY KEY,
-	service_id BIGINT,
+	id BIGSERIAL,
+	service_id BIGINT NULL,
 	name VARCHAR(45) UNIQUE NOT NULL,
-	description VARCHAR(1000),
-	FOREIGN KEY (service_id)
-      REFERENCES services (id)
+	description VARCHAR(1000) NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (service_id) REFERENCES services (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE iF NOT EXISTS lawyers(
-	id BIGSERIAL PRIMARY KEY,
+	id BIGSERIAL,
 	user_id BIGINT NOT NULL,
 	description VARCHAR(1000) NOT NULL,
-	experience REAL,
-	FOREIGN KEY (user_id)
-      REFERENCES users (id)
+	experience REAL NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE iF NOT EXISTS consultations(
-	id BIGSERIAL PRIMARY KEY,
+	id BIGSERIAL,
 	lawyer_id BIGINT NOT NULL,
-	user_id BIGINT,
+	user_id BIGINT NULL,
 	visit_time TIMESTAMP NOT NULL,
-	FOREIGN KEY (lawyer_id)
-      REFERENCES lawyers (id),
-	FOREIGN KEY (user_id)
-      REFERENCES users (id)
+	PRIMARY KEY (id),
+	FOREIGN KEY (lawyer_id) REFERENCES lawyers (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE iF NOT EXISTS reviews(
-	id BIGSERIAL PRIMARY KEY,
+	id BIGSERIAL,
 	user_id BIGINT NOT NULL,
 	description VARCHAR(1000) NOT NULL,
 	grade INT NOT NULL,
 	review_time TIMESTAMP(3) NOT NULL,
-	FOREIGN KEY (user_id)
-      REFERENCES users (id)
+	PRIMARY KEY (id),
+	FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE iF NOT EXISTS affairs(
-	id BIGSERIAL PRIMARY KEY,
-	user_id BIGINT,
+	id BIGSERIAL,
+	user_id BIGINT NULL,
 	name VARCHAR(45) UNIQUE NOT NULL,
 	status VARCHAR(45) UNIQUE NOT NULL,
 	description VARCHAR(1000) UNIQUE NOT NULL,
 	start_date DATE NOT NULL,
-	end_date DATE,
+	end_date DATE NULL,
 	price DECIMAL(10, 2),
-	FOREIGN KEY (user_id)
-       REFERENCES users (id)
+	PRIMARY KEY (id),
+	FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE iF NOT EXISTS lawyers_has_services (
-	lawyer_id BIGINT REFERENCES lawyers (id),
-	service_id BIGINT REFERENCES services (id),
-	CONSTRAINT lawyers_has_services_pkey PRIMARY KEY (lawyer_id, service_id)
+	lawyer_id BIGINT NOT NULL,
+	service_id BIGINT NOT NULL,
+	PRIMARY KEY (lawyer_id, service_id),
+	FOREIGN KEY (lawyer_id) REFERENCES lawyers (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (service_id) REFERENCES services (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE iF NOT EXISTS affairs_has_lawyers (
-	affair_id BIGINT REFERENCES affairs (id),
-	lawyer_id BIGINT REFERENCES lawyers (id),
-	CONSTRAINT affairs_has_lawyers_pkey PRIMARY KEY (affair_id, lawyer_id)
+	affair_id BIGINT NOT NULL,
+	lawyer_id BIGINT NOT NULL,
+	PRIMARY KEY (affair_id, lawyer_id),
+    FOREIGN KEY (affair_id) REFERENCES affairs (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (lawyer_id) REFERENCES lawyers (id) ON UPDATE CASCADE ON DELETE CASCADE
 );

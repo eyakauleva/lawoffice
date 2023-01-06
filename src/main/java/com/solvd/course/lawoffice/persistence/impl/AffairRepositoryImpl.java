@@ -16,25 +16,18 @@ import java.sql.SQLException;
 @RequiredArgsConstructor
 public class AffairRepositoryImpl implements AffairRepository {
     private final DataSource dataSource;
+    private final static String SELECT_BY_STATUS_QUERY
+            = "select count(*) as affairs_count from affairs where status = ?";
 
     @Override
-    public Integer countSuccessAffairs() {
-        return countAffairsByStatus(AffairStatus.SUCCESS);
-    }
-
-    @Override
-    public Integer countFailureAffairs() {
-        return countAffairsByStatus(AffairStatus.FAILURE);
-    }
-
-    private Integer countAffairsByStatus(AffairStatus status) {
+    public Integer countByStatus(AffairStatus status) {
         try (Connection con = dataSource.getConnection();
-             PreparedStatement st = con.prepareStatement("select * from affairs where status = ?")) {
+             PreparedStatement st = con.prepareStatement(SELECT_BY_STATUS_QUERY)) {
             st.setString(1, status.getValue());
             ResultSet rs = st.executeQuery();
             int count = 0;
             while (rs.next()) {
-                count = rs.getInt("affairsCount");
+                count = rs.getInt("affairs_count");
             }
             rs.close();
             return count;

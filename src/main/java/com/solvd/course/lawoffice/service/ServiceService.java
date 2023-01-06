@@ -1,25 +1,21 @@
 package com.solvd.course.lawoffice.service;
 
 import com.solvd.course.lawoffice.persistence.ServiceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ServiceService{
     private final ServiceRepository serviceRepository;
 
-    @Autowired
-    public ServiceService(ServiceRepository serviceRepository) {
-        this.serviceRepository = serviceRepository;
+    public List<com.solvd.course.lawoffice.domain.Service> getAll(){
+        return serviceRepository.getAll();
     }
 
-    public List<com.solvd.course.lawoffice.domain.Service> getAllServices(){
-        return serviceRepository.getAllServices();
-    }
-
-    public com.solvd.course.lawoffice.domain.Service getServiceById(Long serviceId){
-        return serviceRepository.getServiceById(serviceId);
+    public com.solvd.course.lawoffice.domain.Service getById(Long serviceId){
+        return serviceRepository.getById(serviceId);
     }
 }

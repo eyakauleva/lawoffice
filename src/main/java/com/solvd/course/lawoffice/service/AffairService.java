@@ -1,22 +1,16 @@
 package com.solvd.course.lawoffice.service;
 
+import com.solvd.course.lawoffice.domain.enums.AffairStatus;
 import com.solvd.course.lawoffice.persistence.AffairRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AffairService {
     private final AffairRepository affairRepository;
 
-    @Autowired
-    public AffairService(AffairRepository affairRepository) {
-        this.affairRepository = affairRepository;
-    }
-
-    public Integer countSuccessAffairs(){
-        return affairRepository.countSuccessAffairs();
-    }
-    public Integer countFailureAffairs(){
-        return affairRepository.countFailureAffairs();
+    public Integer countByStatus(AffairStatus status){
+        return affairRepository.countByStatus(status);
     }
 }

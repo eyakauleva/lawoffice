@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/lawoffice
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=law_office_schema
     username: postgres
     password: system
   sql:

@@ -4,7 +4,7 @@ import com.solvd.course.lawoffice.domain.Lawyer;
 import com.solvd.course.lawoffice.service.LawyerService;
 import com.solvd.course.lawoffice.web.dto.LawyerDto;
 import com.solvd.course.lawoffice.web.mapper.LawyerMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,20 +16,16 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/lawyers")
+@RequiredArgsConstructor
 public class LawyerController {
     private final LawyerService lawyerService;
     private final LawyerMapper lawyerMapper;
 
-    @Autowired
-    public LawyerController(LawyerService lawyerService, LawyerMapper lawyerMapper) {
-        this.lawyerService = lawyerService;
-        this.lawyerMapper = lawyerMapper;
-    }
-
     @GetMapping
-    public ResponseEntity<List<LawyerDto>> getAllLawyers(){
-        List<Lawyer> lawyers = lawyerService.getAllLawyers();
-        List<LawyerDto> lawyerDtos = lawyers.stream().map(lawyerMapper::domainToDto)
+    public ResponseEntity<List<LawyerDto>> getAll(){
+        List<Lawyer> lawyers = lawyerService.getAll();
+        List<LawyerDto> lawyerDtos = lawyers.stream()
+                .map(lawyerMapper::domainToDto)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(lawyerDtos, HttpStatus.OK);
     }

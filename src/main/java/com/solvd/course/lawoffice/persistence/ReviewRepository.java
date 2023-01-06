@@ -5,8 +5,8 @@ import com.solvd.course.lawoffice.domain.Review;
 import java.util.List;
 
 public interface ReviewRepository {
-    void saveReview(Review review);
-    void updateReview(Review review);
-    void deleteReview(Long id);
-    List<Review> getAllReviews();
+    void create(Review review);
+    void update(Review review);
+    void delete(Long id);
+    List<Review> getAll();
 }

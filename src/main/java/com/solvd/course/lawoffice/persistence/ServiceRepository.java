@@ -5,7 +5,6 @@ import com.solvd.course.lawoffice.domain.Service;
 import java.util.List;
 
 public interface ServiceRepository {
-    List<Service> getLawyerServices(Long lawyerId);
-    List<Service> getAllServices();
-    Service getServiceById(Long id);
+    List<Service> getAll();
+    Service getById(Long id);
 }

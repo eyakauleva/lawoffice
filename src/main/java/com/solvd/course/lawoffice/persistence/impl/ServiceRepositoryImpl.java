@@ -15,45 +15,23 @@ import java.util.List;
 @AllArgsConstructor
 public class ServiceRepositoryImpl implements ServiceRepository {
     private final DataSource dataSource;
+    private final static String SELECT_ALL_QUERY
+            = "select services.id service_id, services.service_id service_parent_id, " +
+            "services.name service_name, services.description service_description " +
+            "from services " +
+            "inner join lawyers_has_services on services.id=lawyers_has_services.service_id;";
+    private final static String SELECT_BY_ID_QUERY
+            = "select services.id service_id, services.service_id service_parent_id, " +
+            "services.name service_name, services.description service_description " +
+            "from services " +
+            "inner join lawyers_has_services on services.id=lawyers_has_services.service_id " +
+            "where services.id = ?;";
 
     @Override
-    public List<Service> getLawyerServices(Long lawyerId) {
-        String SELECT_LAWYER_SERVICES = "select \n" +
-                "services.id service_id, services.service_id service_parent_id,\n" +
-                "services.name service_name, services.description service_description\n" +
-                "from services \n" +
-                "inner join lawyers_has_services on services.id=lawyers_has_services.service_id\n" +
-                "where lawyers_has_services.lawyer_id = ?;";
-        try (Connection con = dataSource.getConnection();
-             PreparedStatement st = con.prepareStatement(SELECT_LAWYER_SERVICES)) {
-            st.setLong(1, lawyerId);
-            ResultSet rs = st.executeQuery();
-            List<Service> services = new ArrayList<>();
-            while (rs.next()) {
-                Long id = rs.getLong("service_id");
-                Long serviceParentId = rs.getLong("service_parent_id");
-                String name = rs.getString("service_name");
-                String description = rs.getString("service_description");
-                Service service = new Service(id, name, description, new Service(serviceParentId));
-                services.add(service);
-            }
-            rs.close();
-            return services;
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public List<Service> getAllServices() {
-        String SELECT_ALL_SERVICES = "select \n" +
-                "services.id service_id, services.service_id service_parent_id,\n" +
-                "services.name service_name, services.description service_description\n" +
-                "from services \n" +
-                "inner join lawyers_has_services on services.id=lawyers_has_services.service_id;";
+    public List<Service> getAll() {
         try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(SELECT_ALL_SERVICES)) {
+             ResultSet rs = st.executeQuery(SELECT_ALL_QUERY)) {
             List<Service> services = new ArrayList<>();
             while (rs.next()) {
                 Long id = rs.getLong("service_id");
@@ -70,15 +48,9 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
-    public Service getServiceById(Long serviceId) {
-        String SELECT_LAWYER_SERVICES = "select \n" +
-                "services.id service_id, services.service_id service_parent_id,\n" +
-                "services.name service_name, services.description service_description\n" +
-                "from services \n" +
-                "inner join lawyers_has_services on services.id=lawyers_has_services.service_id\n" +
-                "where services.id = ?;";
+    public Service getById(Long serviceId) {
         try (Connection con = dataSource.getConnection();
-             PreparedStatement st = con.prepareStatement(SELECT_LAWYER_SERVICES)) {
+             PreparedStatement st = con.prepareStatement(SELECT_BY_ID_QUERY)) {
             st.setLong(1, serviceId);
             ResultSet rs = st.executeQuery();
             Service service = new Service();

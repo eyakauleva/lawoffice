@@ -2,29 +2,24 @@ package com.solvd.course.lawoffice.service;
 
 import com.solvd.course.lawoffice.domain.Consultation;
 import com.solvd.course.lawoffice.persistence.ConsultationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ConsultationService {
     private final ConsultationRepository consultationRepository;
-
-    @Autowired
-    public ConsultationService(ConsultationRepository consultationRepository) {
-        this.consultationRepository = consultationRepository;
+    public void create(Consultation consultation) {
+        consultationRepository.create(consultation);
     }
 
-    public void createConsultation(Consultation consultation) {
-        consultationRepository.createConsultation(consultation);
+    public void update(Consultation consultation) {
+        consultationRepository.update(consultation);
     }
 
-    public void assignToConsultation(Consultation consultation) {
-        consultationRepository.assignToConsultation(consultation);
-    }
-
-    public List<Consultation> getConsultations(Boolean unoccupiedOnly) {
-        return consultationRepository.getConsultations(unoccupiedOnly);
+    public List<Consultation> getAll(Boolean unoccupiedOnly) {
+        return consultationRepository.findAll(unoccupiedOnly);
     }
 }
