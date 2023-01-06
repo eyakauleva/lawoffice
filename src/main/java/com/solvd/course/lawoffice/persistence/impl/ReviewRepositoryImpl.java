@@ -1,41 +1,34 @@
 package com.solvd.course.lawoffice.persistence.impl;
 
-import com.solvd.course.lawoffice.domain.Lawyer;
 import com.solvd.course.lawoffice.domain.Review;
 import com.solvd.course.lawoffice.domain.User;
 import com.solvd.course.lawoffice.domain.exception.DaoException;
 import com.solvd.course.lawoffice.persistence.ReviewRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
-@Component
+@Repository
+@AllArgsConstructor
 public class ReviewRepositoryImpl implements ReviewRepository {
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ReviewRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private final DataSource dataSource;
 
     @Override
     public void saveReview(Review review) {
         String SAVE_REVIEW = "insert into reviews(user_id, description, grade, review_time) values(?, ?, ?, ?);";
-        try (Connection con = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection();
-             PreparedStatement st = con.prepareStatement(SAVE_REVIEW)){
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement st = con.prepareStatement(SAVE_REVIEW)) {
             st.setLong(1, review.getUser().getId());
             st.setString(2, review.getDescription());
             st.setInt(3, review.getGrade());
             st.setTimestamp(4, Timestamp.valueOf(review.getReviewTime()));
             st.executeUpdate();
-        } catch (SQLException | NullPointerException e){
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
@@ -43,15 +36,15 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public void updateReview(Review review) {
         String UPDATE_REVIEW = "update reviews set user_id=?, description=?, grade=?, review_time=? where id=?;";
-        try (Connection con = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection();
-             PreparedStatement st = con.prepareStatement(UPDATE_REVIEW)){
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement st = con.prepareStatement(UPDATE_REVIEW)) {
             st.setLong(1, review.getUser().getId());
             st.setString(2, review.getDescription());
             st.setInt(3, review.getGrade());
             st.setTimestamp(4, Timestamp.valueOf(review.getReviewTime()));
             st.setLong(5, review.getId());
             st.executeUpdate();
-        } catch (SQLException | NullPointerException e){
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
@@ -59,11 +52,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public void deleteReview(Long id) {
         String DROP_REVIEW = "delete from reviews where id=?;";
-        try (Connection con = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection();
-             PreparedStatement st = con.prepareStatement(DROP_REVIEW)){
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement st = con.prepareStatement(DROP_REVIEW)) {
             st.setLong(1, id);
             st.executeUpdate();
-        } catch (SQLException | NullPointerException e){
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
@@ -72,7 +65,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     public List<Review> getAllReviews() {
         String SELECT_ALL_REVIEWS = "select reviews.*, users.name, users.surname\n" +
                 "from reviews inner join users on users.id = reviews.user_id;";
-        try (Connection con = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection();
+        try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(SELECT_ALL_REVIEWS)) {
             List<Review> reviews = new ArrayList<>();
@@ -89,7 +82,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
                 reviews.add(review);
             }
             return reviews;
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }

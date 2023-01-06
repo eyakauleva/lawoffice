@@ -3,22 +3,19 @@ package com.solvd.course.lawoffice.persistence.impl;
 import com.solvd.course.lawoffice.domain.enums.AffairStatus;
 import com.solvd.course.lawoffice.domain.exception.DaoException;
 import com.solvd.course.lawoffice.persistence.AffairRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
-import java.util.Objects;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Repository
+@RequiredArgsConstructor
 public class AffairRepositoryImpl implements AffairRepository {
-
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public AffairRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private final DataSource dataSource;
 
     @Override
     public Integer countSuccessAffairs() {
@@ -30,8 +27,8 @@ public class AffairRepositoryImpl implements AffairRepository {
         return countAffairsByStatus(AffairStatus.FAILURE);
     }
 
-    private Integer countAffairsByStatus(AffairStatus status){
-        try (Connection con = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection();
+    private Integer countAffairsByStatus(AffairStatus status) {
+        try (Connection con = dataSource.getConnection();
              PreparedStatement st = con.prepareStatement("select * from affairs where status = ?")) {
             st.setString(1, status.getValue());
             ResultSet rs = st.executeQuery();
@@ -41,7 +38,7 @@ public class AffairRepositoryImpl implements AffairRepository {
             }
             rs.close();
             return count;
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }

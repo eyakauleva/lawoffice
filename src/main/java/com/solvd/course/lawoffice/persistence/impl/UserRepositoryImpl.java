@@ -1,4 +1,8 @@
 package com.solvd.course.lawoffice.persistence.impl;
 
-public class UserRepositoryImpl {
+import com.solvd.course.lawoffice.persistence.UserRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class UserRepositoryImpl implements UserRepository {
 }

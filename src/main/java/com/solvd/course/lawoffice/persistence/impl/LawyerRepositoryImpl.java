@@ -4,10 +4,10 @@ import com.solvd.course.lawoffice.domain.Lawyer;
 import com.solvd.course.lawoffice.domain.User;
 import com.solvd.course.lawoffice.domain.exception.DaoException;
 import com.solvd.course.lawoffice.persistence.LawyerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,16 +15,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
+@RequiredArgsConstructor
 public class LawyerRepositoryImpl implements LawyerRepository {
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public LawyerRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private final DataSource dataSource;
 
     @Override
     public List<Lawyer> getAllLawyers() {
@@ -35,7 +30,7 @@ public class LawyerRepositoryImpl implements LawyerRepository {
                 "\tfrom lawyers \n" +
                 "\tinner join users on users.id = lawyers.user_id \n" +
                 "\twhere users.status='ACTIVE' and users.role='LAWYER';";
-        try (Connection con = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection();
+        try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(SELECT_ALL_LAWYERS)) {
             List<Lawyer> lawyers = new ArrayList<>();
@@ -55,7 +50,7 @@ public class LawyerRepositoryImpl implements LawyerRepository {
                 lawyers.add(lawyer);
             }
             return lawyers;
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }

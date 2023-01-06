@@ -1,5 +1,6 @@
 package com.solvd.course.lawoffice.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public class ConsultationDto {
     private Long id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime visitTime;
     private LawyerDto lawyer;
     private UserDto user;

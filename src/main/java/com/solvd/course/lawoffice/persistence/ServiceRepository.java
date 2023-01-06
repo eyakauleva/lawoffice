@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ServiceRepository {
     List<Service> getLawyerServices(Long lawyerId);
+    List<Service> getAllServices();
+    Service getServiceById(Long id);
 }

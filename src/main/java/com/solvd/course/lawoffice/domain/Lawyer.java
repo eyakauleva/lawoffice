@@ -15,4 +15,9 @@ public class Lawyer {
     private Float experience;
     private User user;
     private List<Service> services;
+
+    public Lawyer(Long id, User user) {
+        this.id = id;
+        this.user = user;
+    }
 }
