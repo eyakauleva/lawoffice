@@ -12,7 +12,7 @@ import java.util.List;
 public class LawyerService {
     private final LawyerRepository lawyerRepository;
 
-    public List<Lawyer> getAll() {
-        return lawyerRepository.getAll();
+    public List<Lawyer> findAll() {
+        return lawyerRepository.findAll();
     }
 }

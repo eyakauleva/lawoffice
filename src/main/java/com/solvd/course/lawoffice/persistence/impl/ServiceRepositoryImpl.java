@@ -1,15 +1,19 @@
 package com.solvd.course.lawoffice.persistence.impl;
 
 import com.solvd.course.lawoffice.domain.Service;
-import com.solvd.course.lawoffice.domain.exception.DaoException;
 import com.solvd.course.lawoffice.persistence.ServiceRepository;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -28,7 +32,28 @@ public class ServiceRepositoryImpl implements ServiceRepository {
             "where services.id = ?;";
 
     @Override
-    public List<Service> getAll() {
+    @SneakyThrows
+    public Optional<Service> findById(Long serviceId) {
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement st = con.prepareStatement(SELECT_BY_ID_QUERY)) {
+            st.setLong(1, serviceId);
+            ResultSet rs = st.executeQuery();
+            Optional<Service> service = Optional.empty();
+            while (rs.next()) {
+                Long id = rs.getLong("service_id");
+                Long serviceParentId = rs.getLong("service_parent_id");
+                String name = rs.getString("service_name");
+                String description = rs.getString("service_description");
+                service = Optional.of(new Service(id, name, description, new Service(serviceParentId)));
+            }
+            rs.close();
+            return service;
+        }
+    }
+
+    @Override
+    @SneakyThrows
+    public List<Service> findAll() {
         try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(SELECT_ALL_QUERY)) {
@@ -42,29 +67,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
                 services.add(service);
             }
             return services;
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public Service getById(Long serviceId) {
-        try (Connection con = dataSource.getConnection();
-             PreparedStatement st = con.prepareStatement(SELECT_BY_ID_QUERY)) {
-            st.setLong(1, serviceId);
-            ResultSet rs = st.executeQuery();
-            Service service = new Service();
-            while (rs.next()) {
-                Long id = rs.getLong("service_id");
-                Long serviceParentId = rs.getLong("service_parent_id");
-                String name = rs.getString("service_name");
-                String description = rs.getString("service_description");
-                service = new Service(id, name, description, new Service(serviceParentId));
-            }
-            rs.close();
-            return service;
-        } catch (SQLException e) {
-            throw new DaoException(e);
         }
     }
 }

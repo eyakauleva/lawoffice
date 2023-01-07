@@ -22,19 +22,19 @@ public class ServiceController {
     private final ServiceService serviceService;
     private final ServiceMapper serviceMapper;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ServiceDto> findById(@PathVariable("id") Long id) {
+        Service service = serviceService.findById(id);
+        ServiceDto serviceDto = serviceMapper.domainToDto(service);
+        return new ResponseEntity<>(serviceDto, HttpStatus.OK);
+    }
+
     @GetMapping
-    public ResponseEntity<List<ServiceDto>> getAll() {
-        List<Service> services = serviceService.getAll();
+    public ResponseEntity<List<ServiceDto>> findAll() {
+        List<Service> services = serviceService.findAll();
         List<ServiceDto> serviceDtos = services.stream()
                 .map(serviceMapper::domainToDto)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(serviceDtos, HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ServiceDto> getById(@PathVariable("id") Long id) {
-        Service service = serviceService.getById(id);
-        ServiceDto serviceDto = serviceMapper.domainToDto(service);
-        return new ResponseEntity<>(serviceDto, HttpStatus.OK);
     }
 }

@@ -22,8 +22,8 @@ public class LawyerController {
     private final LawyerMapper lawyerMapper;
 
     @GetMapping
-    public ResponseEntity<List<LawyerDto>> getAll(){
-        List<Lawyer> lawyers = lawyerService.getAll();
+    public ResponseEntity<List<LawyerDto>> findAll(){
+        List<Lawyer> lawyers = lawyerService.findAll();
         List<LawyerDto> lawyerDtos = lawyers.stream()
                 .map(lawyerMapper::domainToDto)
                 .collect(Collectors.toList());

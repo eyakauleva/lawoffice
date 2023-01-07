@@ -1,5 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS law_office_schema;
 
+SET search_path = law_office_schema, "$user", public;
+
 CREATE TABLE iF NOT EXISTS users(
 	id BIGSERIAL,
 	role VARCHAR(45) NOT NULL,
@@ -35,6 +37,8 @@ CREATE TABLE iF NOT EXISTS consultations(
 	user_id BIGINT NULL,
 	visit_time TIMESTAMP NOT NULL,
 	PRIMARY KEY (id),
+	UNIQUE (lawyer_id, visit_time),
+	UNIQUE (user_id, visit_time),
 	FOREIGN KEY (lawyer_id) REFERENCES lawyers (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL
 );

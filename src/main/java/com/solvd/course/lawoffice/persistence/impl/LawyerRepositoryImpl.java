@@ -3,15 +3,14 @@ package com.solvd.course.lawoffice.persistence.impl;
 import com.solvd.course.lawoffice.domain.Lawyer;
 import com.solvd.course.lawoffice.domain.Service;
 import com.solvd.course.lawoffice.domain.User;
-import com.solvd.course.lawoffice.domain.exception.DaoException;
 import com.solvd.course.lawoffice.persistence.LawyerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,8 @@ public class LawyerRepositoryImpl implements LawyerRepository {
             "inner join services on lawyers_has_services.service_id = services.id;";
 
     @Override
-    public List<Lawyer> getAll() {
+    @SneakyThrows
+    public List<Lawyer> findAll() {
         try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(SELECT_ALL_QUERY)) {
@@ -71,8 +71,6 @@ public class LawyerRepositoryImpl implements LawyerRepository {
                 services.add(service);
             }
             return lawyers;
-        } catch (SQLException e) {
-            throw new DaoException(e);
         }
     }
 }

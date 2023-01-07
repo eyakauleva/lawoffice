@@ -26,7 +26,7 @@ public class ReviewController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}")
+    @PatchMapping(value = "/{id}")
     public ResponseEntity<Void> update(@RequestBody ReviewDto reviewDto, @PathVariable("id") Long id){
         reviewDto.setId(id);
         Review review = reviewMapper.dtoToDomain(reviewDto);
@@ -41,8 +41,8 @@ public class ReviewController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewDto>> getAll(){
-        List<Review> reviews = reviewService.getAll();
+    public ResponseEntity<List<ReviewDto>> findAll(){
+        List<Review> reviews = reviewService.findAll();
         List<ReviewDto> reviewDtos = reviews.stream()
                 .map(reviewMapper::domainToDto)
                 .collect(Collectors.toList());

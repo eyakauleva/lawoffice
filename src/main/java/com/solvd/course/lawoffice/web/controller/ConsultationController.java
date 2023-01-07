@@ -32,7 +32,7 @@ public class ConsultationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}")
+    @PatchMapping(value = "/{id}")
     @Validated(UpdateGroup.class)
     public ResponseEntity<Void> update(@RequestBody @Valid ConsultationDto consultationDto, @PathVariable("id") Long id) {
         consultationDto.setId(id);
@@ -42,8 +42,8 @@ public class ConsultationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ConsultationDto>> getAll(@RequestParam(required = false) boolean unoccupiedOnly) {
-        List<Consultation> consultations = consultationService.getAll(unoccupiedOnly);
+    public ResponseEntity<List<ConsultationDto>> findAll(@RequestParam(required = false) boolean unoccupiedOnly) {
+        List<Consultation> consultations = consultationService.findAll(unoccupiedOnly);
         List<ConsultationDto> consultationDtos = consultations.stream()
                 .map(consultationMapper::domainToDto)
                 .collect(Collectors.toList());
