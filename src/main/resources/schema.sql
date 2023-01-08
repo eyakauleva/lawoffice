@@ -81,3 +81,36 @@ CREATE TABLE iF NOT EXISTS affairs_has_lawyers (
     FOREIGN KEY (affair_id) REFERENCES affairs (id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (lawyer_id) REFERENCES lawyers (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE OR REPLACE PROCEDURE check_consultation_on_unique_constraints(
+	lawyer_id bigint,
+	user_id bigint,
+	visit_time timestamp,
+	result_code OUT INT)
+LANGUAGE plpgsql AS
+'
+DECLARE
+   lawyer_id_visit_time_key TEXT := ''consultations_lawyer_id_visit_time_key'';
+   user_id_visit_time_key TEXT := ''consultations_user_id_visit_time_key'';
+   violation_name TEXT;
+   should_rollback boolean := false;
+BEGIN
+	begin
+		insert into consultations(lawyer_id, user_id, visit_time)
+			values(lawyer_id, user_id, visit_time);
+		should_rollback := true;
+		result_code := 0;
+		exception
+			when UNIQUE_VIOLATION then
+				get STACKED DIAGNOSTICS violation_name := CONSTRAINT_NAME;
+				if violation_name = lawyer_id_visit_time_key then
+					result_code := 1;
+				end if;
+				if  violation_name= user_id_visit_time_key then
+					result_code := 2;
+				end if;
+	end;
+	if should_rollback then
+		rollback;
+	end if;
+END; '

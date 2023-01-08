@@ -5,6 +5,7 @@ import com.solvd.course.lawoffice.persistence.ReviewRepository;
 import com.solvd.course.lawoffice.service.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ReviewService {
         reviewRepository.create(review);
     }
 
+    @Transactional
     public void update(Review review){
         Optional<Review> initialReview = reviewRepository.findById(review.getId());
         if(initialReview.isEmpty()) throw new ResourceNotFoundException("Review (id=" + review.getId() + ") does not exist");
@@ -31,6 +33,7 @@ public class ReviewService {
         reviewRepository.update(review);
     }
 
+    @Transactional
     public void delete(Long id){
         Optional<Review> initialReview = reviewRepository.findById(id);
         if(initialReview.isEmpty()) throw new ResourceNotFoundException("Review (id=" + id + ") does not exist");

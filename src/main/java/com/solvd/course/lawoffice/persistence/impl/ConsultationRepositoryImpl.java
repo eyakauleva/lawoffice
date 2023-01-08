@@ -3,11 +3,12 @@ package com.solvd.course.lawoffice.persistence.impl;
 import com.solvd.course.lawoffice.domain.Consultation;
 import com.solvd.course.lawoffice.domain.Lawyer;
 import com.solvd.course.lawoffice.domain.User;
+import com.solvd.course.lawoffice.domain.enums.ConsultationUniqueConstraint;
 import com.solvd.course.lawoffice.persistence.ConsultationRepository;
+import com.solvd.course.lawoffice.persistence.exception.UniqueConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;
-import org.postgresql.util.PSQLException;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -35,9 +36,13 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
             "inner join users on users.id = lawyers.user_id " +
             "where consultations.user_id is %s null %s;";
 
+    private final static String CALL_CHECK_CONSULTATION_ON_UNIQUE_CONSTRAINTS_PROCEDURE
+            = "call check_consultation_on_unique_constraints(?, ?, ?, ?);";
+
     @Override
     @SneakyThrows
     public void create(Consultation consultation) {
+        checkConsultationOnUniqueConstraints(consultation);
         try (Connection con = dataSource.getConnection();
              PreparedStatement st = con.prepareStatement(CREATE_QUERY)) {
             st.setLong(1, consultation.getLawyer().getId());
@@ -45,16 +50,13 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
             else st.setLong(2, consultation.getUser().getId());
             st.setTimestamp(3, Timestamp.valueOf(consultation.getVisitTime()));
             st.executeUpdate();
-        } catch (PSQLException e){
-            //TODO как понять выбросилось исключение что консультация уже существует для такого адвоката
-            // или что консультация уже существует для такого клиента ???
-            // (? чекать по названию констрейнта в мессендже эксепшена ?)
         }
     }
 
     @Override
     @SneakyThrows
     public void update(Consultation consultation) {
+        checkConsultationOnUniqueConstraints(consultation);
         try (Connection con = dataSource.getConnection();
              PreparedStatement st = con.prepareStatement(UPDATE_QUERY)) {
             st.setLong(1, consultation.getLawyer().getId());
@@ -112,6 +114,24 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
                 consultations.add(consultation);
             }
             return consultations;
+        }
+    }
+
+    @SneakyThrows
+    private void checkConsultationOnUniqueConstraints(Consultation consultation){
+        try (Connection con = dataSource.getConnection();
+             CallableStatement st = con.prepareCall(CALL_CHECK_CONSULTATION_ON_UNIQUE_CONSTRAINTS_PROCEDURE)){
+            st.setLong(1, consultation.getLawyer().getId());
+            if (Objects.isNull(consultation.getUser())) st.setNull(2, Types.BIGINT);
+            else st.setLong(2, consultation.getUser().getId());
+            st.setTimestamp(3, Timestamp.valueOf(consultation.getVisitTime()));
+            st.registerOutParameter(4, Types.INTEGER);
+            st.executeUpdate();
+            int result_code = st.getInt(4);
+            if(ConsultationUniqueConstraint.LAWYER_BUSY.getValue()==result_code)
+                throw new UniqueConstraintViolationException("Lawyer already has consultation at this time");
+            else if(ConsultationUniqueConstraint.USER_BUSY.getValue()==result_code)
+                throw new UniqueConstraintViolationException("User already has consultation at this time");
         }
     }
 }

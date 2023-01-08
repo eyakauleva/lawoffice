@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 public class AffairRepositoryImpl implements AffairRepository {
     private final DataSource dataSource;
     private final static String SELECT_BY_STATUS_QUERY
-            = "select count(*) as affairs_count from affairs where status = ?";
+            = "select count(1) as affairs_count from affairs where status = ?";
 
     @Override
     @SneakyThrows

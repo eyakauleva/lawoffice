@@ -1,5 +1,6 @@
 package com.solvd.course.lawoffice.web.controller.exception;
 
+import com.solvd.course.lawoffice.persistence.exception.UniqueConstraintViolationException;
 import com.solvd.course.lawoffice.service.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,18 +22,18 @@ public class ExceptionHandling {
         return new ResponseEntity<>(new ExceptionBody(message.toString()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ExceptionBody> handleResourceNotFoundException(ResourceNotFoundException ex){
+    @ExceptionHandler({ResourceNotFoundException.class, UniqueConstraintViolationException.class})
+    public ResponseEntity<ExceptionBody> handleCustomExceptions(Exception ex) {
         return new ResponseEntity<>(new ExceptionBody(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ExceptionBody> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex){
+    public ResponseEntity<ExceptionBody> handleMethodArgumentTypeMismatchException() {
         return new ResponseEntity<>(new ExceptionBody("Bad parameters"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Throwable.class)
-    public ResponseEntity<ExceptionBody> handleOtherExceptions(){
+    public ResponseEntity<ExceptionBody> handleOtherExceptions() {
         return new ResponseEntity<>(new ExceptionBody("Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
