@@ -33,23 +33,27 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
             "users.name user_name, users.surname user_surname " +
             "from consultations " +
             "inner join lawyers on lawyers.id = consultations.lawyer_id " +
-            "inner join users on users.id = lawyers.user_id " +
-            "where consultations.user_id is %s null %s;";
+            "inner join users on users.id = lawyers.user_id %s;";
 
     private final static String CALL_CHECK_CONSULTATION_ON_UNIQUE_CONSTRAINTS_PROCEDURE
             = "call check_consultation_on_unique_constraints(?, ?, ?, ?);";
 
     @Override
     @SneakyThrows
-    public void create(Consultation consultation) {
+    public Long create(Consultation consultation) {
         checkConsultationOnUniqueConstraints(consultation);
         try (Connection con = dataSource.getConnection();
-             PreparedStatement st = con.prepareStatement(CREATE_QUERY)) {
+             PreparedStatement st = con.prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
             st.setLong(1, consultation.getLawyer().getId());
             if (Objects.isNull(consultation.getUser())) st.setNull(2, Types.BIGINT);
             else st.setLong(2, consultation.getUser().getId());
             st.setTimestamp(3, Timestamp.valueOf(consultation.getVisitTime()));
             st.executeUpdate();
+            ResultSet rs = st.getGeneratedKeys();
+            rs.next();
+            Long id = rs.getLong(1);
+            rs.close();
+            return id;
         }
     }
 
@@ -60,7 +64,8 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
         try (Connection con = dataSource.getConnection();
              PreparedStatement st = con.prepareStatement(UPDATE_QUERY)) {
             st.setLong(1, consultation.getLawyer().getId());
-            st.setLong(2, consultation.getUser().getId());
+            if (Objects.isNull(consultation.getUser())) st.setNull(2, Types.BIGINT);
+            else st.setLong(2, consultation.getUser().getId());
             st.setTimestamp(3, Timestamp.valueOf(consultation.getVisitTime()));
             st.setLong(4, consultation.getId());
             st.executeUpdate();
@@ -70,7 +75,7 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
     @Override
     @SneakyThrows
     public Optional<Consultation> findById(Long consultationId) {
-        String query = String.format(SELECT_QUERY, Strings.EMPTY, " and consultations.id = " + consultationId);
+        String query = String.format(SELECT_QUERY, " where consultations.id = " + consultationId);
         try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(query)) {
@@ -95,8 +100,8 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
     public List<Consultation> findAll(Boolean unoccupiedOnly) {
         String query;
         if (unoccupiedOnly)
-            query = String.format(SELECT_QUERY, Strings.EMPTY, Strings.EMPTY);
-        else query = String.format(SELECT_QUERY, "not", Strings.EMPTY);
+            query = String.format(SELECT_QUERY, " where consultations.user_id is null");
+        else query = String.format(SELECT_QUERY, Strings.EMPTY);
         try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(query)) {

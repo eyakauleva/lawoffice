@@ -32,14 +32,19 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     @Override
     @SneakyThrows
-    public void create(Review review) {
+    public Long create(Review review) {
         try (Connection con = dataSource.getConnection();
-             PreparedStatement st = con.prepareStatement(CREATE_QUERY)) {
+             PreparedStatement st = con.prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
             st.setLong(1, review.getUser().getId());
             st.setString(2, review.getDescription());
             st.setInt(3, review.getGrade());
             st.setTimestamp(4, Timestamp.valueOf(review.getReviewTime()));
             st.executeUpdate();
+            ResultSet rs = st.getGeneratedKeys();
+            rs.next();
+            Long id = rs.getLong(1);
+            rs.close();
+            return id;
         }
     }
 

@@ -2,6 +2,7 @@ package com.solvd.course.lawoffice.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,6 +21,8 @@ public class ConsultationDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime visitTime;
     @NotNull(groups = CreateGroup.class, message = "Consultation must contain a lawyer")
+    @Valid
     private LawyerDto lawyer;
+    @Valid
     private UserDto user;
 }

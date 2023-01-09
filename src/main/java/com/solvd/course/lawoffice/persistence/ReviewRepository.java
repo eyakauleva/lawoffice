@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReviewRepository {
-    void create(Review review);
+    Long create(Review review);
     void update(Review review);
     void delete(Long id);
     Optional<Review> findById(Long id);

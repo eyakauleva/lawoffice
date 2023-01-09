@@ -1,10 +1,10 @@
 package com.solvd.course.lawoffice.web.controller;
 
 import com.solvd.course.lawoffice.domain.Review;
-import com.solvd.course.lawoffice.domain.exception.ValidationException;
 import com.solvd.course.lawoffice.service.ReviewService;
 import com.solvd.course.lawoffice.web.dto.ReviewDto;
 import com.solvd.course.lawoffice.web.mapper.ReviewMapper;
+import com.solvd.course.lawoffice.web.validation.ComplexTypeGroup;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,20 +23,18 @@ public class ReviewController {
     private final ReviewMapper reviewMapper;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Validated(CreateGroup.class) ReviewDto reviewDto) {
-        if(Objects.isNull(reviewDto.getUser().getId())) throw new ValidationException("Review must contain a client's id");
+    public ResponseEntity<ReviewDto> create(@RequestBody @Validated({CreateGroup.class, ComplexTypeGroup.class}) ReviewDto reviewDto) {
         Review review = reviewMapper.dtoToDomain(reviewDto);
-        reviewService.create(review);
-        return new ResponseEntity<>(HttpStatus.OK);
+        review = reviewService.create(review);
+        return new ResponseEntity<>(reviewMapper.domainToDto(review), HttpStatus.OK);
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<Void> update(@RequestBody ReviewDto reviewDto, @PathVariable("id") Long id) {
-        if(Objects.nonNull(reviewDto.getUser()) && Objects.isNull(reviewDto.getUser().getId())) throw new ValidationException("Review must contain a client's id");
+    public ResponseEntity<ReviewDto> update(@RequestBody @Validated(ComplexTypeGroup.class) ReviewDto reviewDto, @PathVariable("id") Long id) {
         reviewDto.setId(id);
         Review review = reviewMapper.dtoToDomain(reviewDto);
-        reviewService.update(review);
-        return new ResponseEntity<>(HttpStatus.OK);
+        review = reviewService.update(review);
+        return new ResponseEntity<>(reviewMapper.domainToDto(review), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")

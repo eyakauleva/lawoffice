@@ -1,10 +1,10 @@
 package com.solvd.course.lawoffice.web.controller;
 
 import com.solvd.course.lawoffice.domain.Consultation;
-import com.solvd.course.lawoffice.domain.exception.ValidationException;
 import com.solvd.course.lawoffice.service.ConsultationService;
 import com.solvd.course.lawoffice.web.dto.ConsultationDto;
 import com.solvd.course.lawoffice.web.mapper.ConsultationMapper;
+import com.solvd.course.lawoffice.web.validation.ComplexTypeGroup;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,26 +24,18 @@ public class ConsultationController {
     private final ConsultationMapper consultationMapper;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Validated(CreateGroup.class) ConsultationDto consultationDto) {
-        if (Objects.isNull(consultationDto.getLawyer().getId()))
-            throw new ValidationException("Consultation must contain a lawyer's id");
-        if (Objects.nonNull(consultationDto.getUser()) && Objects.isNull(consultationDto.getUser().getId()))
-            throw new ValidationException("Consultation must contain a user's id");
+    public ResponseEntity<ConsultationDto> create(@RequestBody @Validated({CreateGroup.class, ComplexTypeGroup.class}) ConsultationDto consultationDto) {
         Consultation consultation = consultationMapper.dtoToDomain(consultationDto);
-        consultationService.create(consultation);
-        return new ResponseEntity<>(HttpStatus.OK);
+        consultation = consultationService.create(consultation);
+        return new ResponseEntity<>(consultationMapper.domainToDto(consultation), HttpStatus.OK);
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<Void> update(@RequestBody ConsultationDto consultationDto, @PathVariable("id") Long id) {
-        if (Objects.nonNull(consultationDto.getLawyer()) && Objects.isNull(consultationDto.getLawyer().getId()))
-            throw new ValidationException("Consultation must contain a lawyer's id");
-        if (Objects.nonNull(consultationDto.getUser()) && Objects.isNull(consultationDto.getUser().getId()))
-            throw new ValidationException("Consultation must contain a user's id");
+    public ResponseEntity<ConsultationDto> update(@RequestBody @Validated(ComplexTypeGroup.class) ConsultationDto consultationDto, @PathVariable("id") Long id) {
         consultationDto.setId(id);
         Consultation consultation = consultationMapper.dtoToDomain(consultationDto);
-        consultationService.update(consultation);
-        return new ResponseEntity<>(HttpStatus.OK);
+        consultation = consultationService.update(consultation);
+        return new ResponseEntity<>(consultationMapper.domainToDto(consultation), HttpStatus.OK);
     }
 
     @GetMapping

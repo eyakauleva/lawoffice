@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ConsultationRepository {
-    void create(Consultation consultation);
+    Long create(Consultation consultation);
     void update(Consultation consultation);
     Optional<Consultation> findById(Long id);
     List<Consultation> findAll(Boolean unoccupiedOnly);

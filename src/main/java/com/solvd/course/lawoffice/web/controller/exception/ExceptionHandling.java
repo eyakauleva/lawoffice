@@ -2,11 +2,11 @@ package com.solvd.course.lawoffice.web.controller.exception;
 
 import com.solvd.course.lawoffice.domain.exception.ResourceNotFoundException;
 import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
-import com.solvd.course.lawoffice.domain.exception.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,9 +17,9 @@ public class ExceptionHandling {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionBody> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
-        StringBuilder message = new StringBuilder("Validation errors: \n");
+        StringBuilder message = new StringBuilder("Validation errors: ");
         for (FieldError fieldError : result.getFieldErrors())
-            message.append(fieldError.getDefaultMessage()).append("\n");
+            message.append(fieldError.getDefaultMessage());
         return new ResponseEntity<>(new ExceptionBody(message.toString()), HttpStatus.BAD_REQUEST);
     }
 
@@ -28,18 +28,18 @@ public class ExceptionHandling {
         return new ResponseEntity<>(new ExceptionBody(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({UniqueConstraintViolationException.class, ValidationException.class})
-    public ResponseEntity<ExceptionBody> handleUniqueConstraintViolationAndValidationExceptions(Exception ex) {
-        return new ResponseEntity<>(new ExceptionBody(ex.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ExceptionBody> handleMethodArgumentTypeMismatchException() {
         return new ResponseEntity<>(new ExceptionBody("Bad parameters"), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Throwable.class)
-    public ResponseEntity<ExceptionBody> handleOtherExceptions() {
-        return new ResponseEntity<>(new ExceptionBody("Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler({UniqueConstraintViolationException.class, HttpRequestMethodNotSupportedException.class})
+    public ResponseEntity<ExceptionBody> handleOtherBadRequestExceptions(Exception ex) {
+        return new ResponseEntity<>(new ExceptionBody(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+//    @ExceptionHandler(Throwable.class)
+//    public ResponseEntity<ExceptionBody> handleAllOtherExceptions() {
+//        return new ResponseEntity<>(new ExceptionBody("Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }
