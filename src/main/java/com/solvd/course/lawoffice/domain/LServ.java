@@ -7,13 +7,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Service {
+public class LServ {
     private Long id;
     private String name;
     private String description;
-    private Service service;
+    private LServ LServ;
 
-    public Service(Long id) {
+    public LServ(Long id) {
         this.id = id;
     }
 }

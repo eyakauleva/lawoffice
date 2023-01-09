@@ -1,7 +1,7 @@
 package com.solvd.course.lawoffice.persistence.impl;
 
-import com.solvd.course.lawoffice.domain.Service;
-import com.solvd.course.lawoffice.persistence.ServiceRepository;
+import com.solvd.course.lawoffice.domain.LServ;
+import com.solvd.course.lawoffice.persistence.LServRepository;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Repository;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
-public class ServiceRepositoryImpl implements ServiceRepository {
+public class LServRepositoryImpl implements LServRepository {
     private final DataSource dataSource;
     private final static String SELECT_ALL_QUERY
             = "select services.id service_id, services.service_id service_parent_id, " +
@@ -33,18 +33,18 @@ public class ServiceRepositoryImpl implements ServiceRepository {
 
     @Override
     @SneakyThrows
-    public Optional<Service> findById(Long serviceId) {
+    public Optional<LServ> findById(Long serviceId) {
         try (Connection con = dataSource.getConnection();
              PreparedStatement st = con.prepareStatement(SELECT_BY_ID_QUERY)) {
             st.setLong(1, serviceId);
             ResultSet rs = st.executeQuery();
-            Optional<Service> service = Optional.empty();
+            Optional<LServ> service = Optional.empty();
             while (rs.next()) {
                 Long id = rs.getLong("service_id");
                 Long serviceParentId = rs.getLong("service_parent_id");
                 String name = rs.getString("service_name");
                 String description = rs.getString("service_description");
-                service = Optional.of(new Service(id, name, description, new Service(serviceParentId)));
+                service = Optional.of(new LServ(id, name, description, new LServ(serviceParentId)));
             }
             rs.close();
             return service;
@@ -53,20 +53,20 @@ public class ServiceRepositoryImpl implements ServiceRepository {
 
     @Override
     @SneakyThrows
-    public List<Service> findAll() {
+    public List<LServ> findAll() {
         try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(SELECT_ALL_QUERY)) {
-            List<Service> services = new ArrayList<>();
+            List<LServ> LServs = new ArrayList<>();
             while (rs.next()) {
                 Long id = rs.getLong("service_id");
                 Long serviceParentId = rs.getLong("service_parent_id");
                 String name = rs.getString("service_name");
                 String description = rs.getString("service_description");
-                Service service = new Service(id, name, description, new Service(serviceParentId));
-                services.add(service);
+                LServ LServ = new LServ(id, name, description, new LServ(serviceParentId));
+                LServs.add(LServ);
             }
-            return services;
+            return LServs;
         }
     }
 }

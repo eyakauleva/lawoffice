@@ -1,4 +1,4 @@
-package com.solvd.course.lawoffice.service.exception;
+package com.solvd.course.lawoffice.domain.exception;
 
 public class ResourceNotFoundException extends RuntimeException{
     public ResourceNotFoundException(String message) {

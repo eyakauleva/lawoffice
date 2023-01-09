@@ -16,5 +16,5 @@ public class LawyerDto {
     private String description;
     private Float experience;
     private UserDto user;
-    private List<ServiceDto> services;
+    private List<LServDto> services;
 }

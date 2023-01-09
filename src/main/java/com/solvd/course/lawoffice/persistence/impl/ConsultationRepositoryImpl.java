@@ -5,7 +5,7 @@ import com.solvd.course.lawoffice.domain.Lawyer;
 import com.solvd.course.lawoffice.domain.User;
 import com.solvd.course.lawoffice.domain.enums.ConsultationUniqueConstraint;
 import com.solvd.course.lawoffice.persistence.ConsultationRepository;
-import com.solvd.course.lawoffice.persistence.exception.UniqueConstraintViolationException;
+import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;

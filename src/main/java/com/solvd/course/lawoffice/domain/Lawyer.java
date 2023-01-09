@@ -14,7 +14,7 @@ public class Lawyer {
     private String description;
     private Float experience;
     private User user;
-    private List<Service> services;
+    private List<LServ> LServs;
 
     public Lawyer(Long id, User user) {
         this.id = id;

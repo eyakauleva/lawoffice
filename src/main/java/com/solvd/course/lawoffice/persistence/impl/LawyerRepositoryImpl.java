@@ -1,7 +1,7 @@
 package com.solvd.course.lawoffice.persistence.impl;
 
+import com.solvd.course.lawoffice.domain.LServ;
 import com.solvd.course.lawoffice.domain.Lawyer;
-import com.solvd.course.lawoffice.domain.Service;
 import com.solvd.course.lawoffice.domain.User;
 import com.solvd.course.lawoffice.persistence.LawyerRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,16 +41,16 @@ public class LawyerRepositoryImpl implements LawyerRepository {
             List<Lawyer> lawyers = new ArrayList<>();
             Long id = null;
             Lawyer lawyer = null;
-            List<Service> services = new ArrayList<>();
+            List<LServ> LServs = new ArrayList<>();
             while (rs.next()) {
                 Long lawyerId = rs.getLong("lawyer_id");
                 if (Objects.isNull(id) || !id.equals(lawyerId)) {
                     id = lawyerId;
                     if (Objects.nonNull(lawyer)) {
-                        lawyer.setServices(services);
+                        lawyer.setLServs(LServs);
                         lawyers.add(lawyer);
                     }
-                    services = new ArrayList<>();
+                    LServs = new ArrayList<>();
                     String lawyerDescription = rs.getString("lawyer_description");
                     Float experience = rs.getFloat("lawyer_experience");
                     Long userId = rs.getLong("user_id");
@@ -67,8 +67,8 @@ public class LawyerRepositoryImpl implements LawyerRepository {
                 Long serviceParentId = rs.getLong("service_parent_id");
                 String serviceName = rs.getString("service_name");
                 String serviceDescription = rs.getString("service_description");
-                Service service = new Service(serviceId, serviceName, serviceDescription, new Service(serviceParentId));
-                services.add(service);
+                LServ LServ = new LServ(serviceId, serviceName, serviceDescription, new LServ(serviceParentId));
+                LServs.add(LServ);
             }
             return lawyers;
         }

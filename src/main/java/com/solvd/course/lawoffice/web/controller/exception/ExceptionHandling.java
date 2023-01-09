@@ -1,7 +1,8 @@
 package com.solvd.course.lawoffice.web.controller.exception;
 
-import com.solvd.course.lawoffice.persistence.exception.UniqueConstraintViolationException;
-import com.solvd.course.lawoffice.service.exception.ResourceNotFoundException;
+import com.solvd.course.lawoffice.domain.exception.ResourceNotFoundException;
+import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
+import com.solvd.course.lawoffice.domain.exception.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -22,8 +23,13 @@ public class ExceptionHandling {
         return new ResponseEntity<>(new ExceptionBody(message.toString()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ResourceNotFoundException.class, UniqueConstraintViolationException.class})
-    public ResponseEntity<ExceptionBody> handleCustomExceptions(Exception ex) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ExceptionBody> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return new ResponseEntity<>(new ExceptionBody(ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({UniqueConstraintViolationException.class, ValidationException.class})
+    public ResponseEntity<ExceptionBody> handleUniqueConstraintViolationAndValidationExceptions(Exception ex) {
         return new ResponseEntity<>(new ExceptionBody(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 

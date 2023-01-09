@@ -2,7 +2,7 @@ package com.solvd.course.lawoffice.service;
 
 import com.solvd.course.lawoffice.domain.Review;
 import com.solvd.course.lawoffice.persistence.ReviewRepository;
-import com.solvd.course.lawoffice.service.exception.ResourceNotFoundException;
+import com.solvd.course.lawoffice.domain.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package com.solvd.course.lawoffice.persistence.exception;
+package com.solvd.course.lawoffice.domain.exception;
 
 public class UniqueConstraintViolationException extends RuntimeException{
     public UniqueConstraintViolationException(String message) {
