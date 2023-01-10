@@ -1,6 +1,7 @@
 package com.solvd.course.lawoffice.web.controller;
 
 import com.solvd.course.lawoffice.domain.Consultation;
+import com.solvd.course.lawoffice.domain.criteria.ConsultationCriteria;
 import com.solvd.course.lawoffice.service.ConsultationService;
 import com.solvd.course.lawoffice.web.dto.ConsultationDto;
 import com.solvd.course.lawoffice.web.mapper.ConsultationMapper;
@@ -8,7 +9,6 @@ import com.solvd.course.lawoffice.web.validation.ComplexTypeGroup;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,26 +24,28 @@ public class ConsultationController {
     private final ConsultationMapper consultationMapper;
 
     @PostMapping
-    public ResponseEntity<ConsultationDto> create(@RequestBody @Validated({CreateGroup.class, ComplexTypeGroup.class}) ConsultationDto consultationDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public ConsultationDto create(@RequestBody @Validated({CreateGroup.class, ComplexTypeGroup.class}) ConsultationDto consultationDto) {
         Consultation consultation = consultationMapper.dtoToDomain(consultationDto);
         consultation = consultationService.create(consultation);
-        return new ResponseEntity<>(consultationMapper.domainToDto(consultation), HttpStatus.OK);
+        return consultationMapper.domainToDto(consultation);
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<ConsultationDto> update(@RequestBody @Validated(ComplexTypeGroup.class) ConsultationDto consultationDto, @PathVariable("id") Long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public ConsultationDto update(@RequestBody @Validated(ComplexTypeGroup.class) ConsultationDto consultationDto, @PathVariable("id") Long id) {
         consultationDto.setId(id);
         Consultation consultation = consultationMapper.dtoToDomain(consultationDto);
         consultation = consultationService.update(consultation);
-        return new ResponseEntity<>(consultationMapper.domainToDto(consultation), HttpStatus.OK);
+        return consultationMapper.domainToDto(consultation);
     }
 
     @GetMapping
-    public ResponseEntity<List<ConsultationDto>> findAll(@RequestParam(required = false) boolean unoccupiedOnly) {
-        List<Consultation> consultations = consultationService.findAll(unoccupiedOnly);
-        List<ConsultationDto> consultationDtos = consultations.stream()
+    @ResponseStatus(HttpStatus.OK)
+    public List<ConsultationDto> findAll(@RequestBody ConsultationCriteria criteria) {
+        List<Consultation> consultations = consultationService.findAll(criteria);
+        return consultations.stream()
                 .map(consultationMapper::domainToDto)
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(consultationDtos, HttpStatus.OK);
     }
 }

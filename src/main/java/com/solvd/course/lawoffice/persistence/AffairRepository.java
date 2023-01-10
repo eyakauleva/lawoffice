@@ -1,7 +1,7 @@
 package com.solvd.course.lawoffice.persistence;
 
-import com.solvd.course.lawoffice.domain.enums.AffairStatus;
+import com.solvd.course.lawoffice.domain.criteria.AffairCriteria;
 
 public interface AffairRepository {
-    Integer countByStatus(AffairStatus status);
+    Integer countByStatus(AffairCriteria criteria);
 }

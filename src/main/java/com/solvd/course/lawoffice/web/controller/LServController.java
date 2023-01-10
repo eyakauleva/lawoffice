@@ -6,11 +6,7 @@ import com.solvd.course.lawoffice.web.dto.LServDto;
 import com.solvd.course.lawoffice.web.mapper.LServMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,18 +19,18 @@ public class LServController {
     private final LServMapper LServMapper;
 
     @GetMapping("/{id}")
-    public ResponseEntity<LServDto> findById(@PathVariable("id") Long id) {
-        LServ LServ = LServService.findById(id);
-        LServDto LServDto = LServMapper.domainToDto(LServ);
-        return new ResponseEntity<>(LServDto, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public LServDto findById(@PathVariable("id") Long id) {
+        LServ service = LServService.findById(id);
+        return LServMapper.domainToDto(service);
     }
 
     @GetMapping
-    public ResponseEntity<List<LServDto>> findAll() {
-        List<LServ> LServs = LServService.findAll();
-        List<LServDto> LServDtos = LServs.stream()
+    @ResponseStatus(HttpStatus.OK)
+    public List<LServDto> findAll() {
+        List<LServ> services = LServService.findAll();
+        return services.stream()
                 .map(LServMapper::domainToDto)
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(LServDtos, HttpStatus.OK);
     }
 }

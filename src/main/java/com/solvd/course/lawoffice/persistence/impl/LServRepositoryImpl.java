@@ -57,16 +57,16 @@ public class LServRepositoryImpl implements LServRepository {
         try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(SELECT_ALL_QUERY)) {
-            List<LServ> LServs = new ArrayList<>();
+            List<LServ> services = new ArrayList<>();
             while (rs.next()) {
                 Long id = rs.getLong("service_id");
                 Long serviceParentId = rs.getLong("service_parent_id");
                 String name = rs.getString("service_name");
                 String description = rs.getString("service_description");
-                LServ LServ = new LServ(id, name, description, new LServ(serviceParentId));
-                LServs.add(LServ);
+                LServ service = new LServ(id, name, description, new LServ(serviceParentId));
+                services.add(service);
             }
-            return LServs;
+            return services;
         }
     }
 }

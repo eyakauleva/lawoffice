@@ -8,7 +8,6 @@ import com.solvd.course.lawoffice.web.validation.ComplexTypeGroup;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,32 +22,34 @@ public class ReviewController {
     private final ReviewMapper reviewMapper;
 
     @PostMapping
-    public ResponseEntity<ReviewDto> create(@RequestBody @Validated({CreateGroup.class, ComplexTypeGroup.class}) ReviewDto reviewDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public ReviewDto create(@RequestBody @Validated({CreateGroup.class, ComplexTypeGroup.class}) ReviewDto reviewDto) {
         Review review = reviewMapper.dtoToDomain(reviewDto);
         review = reviewService.create(review);
-        return new ResponseEntity<>(reviewMapper.domainToDto(review), HttpStatus.OK);
+        return reviewMapper.domainToDto(review);
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<ReviewDto> update(@RequestBody @Validated(ComplexTypeGroup.class) ReviewDto reviewDto, @PathVariable("id") Long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public ReviewDto update(@RequestBody @Validated(ComplexTypeGroup.class) ReviewDto reviewDto, @PathVariable("id") Long id) {
         reviewDto.setId(id);
         Review review = reviewMapper.dtoToDomain(reviewDto);
         review = reviewService.update(review);
-        return new ResponseEntity<>(reviewMapper.domainToDto(review), HttpStatus.OK);
+        return reviewMapper.domainToDto(review);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable("id") Long id) {
         reviewService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewDto>> findAll() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<ReviewDto> findAll() {
         List<Review> reviews = reviewService.findAll();
-        List<ReviewDto> reviewDtos = reviews.stream()
+        return reviews.stream()
                 .map(reviewMapper::domainToDto)
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(reviewDtos, HttpStatus.OK);
     }
 }

@@ -3,6 +3,7 @@ package com.solvd.course.lawoffice.persistence.impl;
 import com.solvd.course.lawoffice.domain.Consultation;
 import com.solvd.course.lawoffice.domain.Lawyer;
 import com.solvd.course.lawoffice.domain.User;
+import com.solvd.course.lawoffice.domain.criteria.ConsultationCriteria;
 import com.solvd.course.lawoffice.domain.enums.ConsultationUniqueConstraint;
 import com.solvd.course.lawoffice.persistence.ConsultationRepository;
 import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
@@ -97,14 +98,10 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
 
     @Override
     @SneakyThrows
-    public List<Consultation> findAll(Boolean unoccupiedOnly) {
-        String query;
-        if (unoccupiedOnly)
-            query = String.format(SELECT_QUERY, " where consultations.user_id is null");
-        else query = String.format(SELECT_QUERY, Strings.EMPTY);
+    public List<Consultation> findAll(ConsultationCriteria criteria) {
         try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(query)) {
+             ResultSet rs = st.executeQuery(prepareQuery(criteria))) {
             List<Consultation> consultations = new ArrayList<>();
             while (rs.next()) {
                 Long id = rs.getLong("consultation_id");
@@ -138,5 +135,12 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
             else if(ConsultationUniqueConstraint.USER_BUSY.getValue()==result_code)
                 throw new UniqueConstraintViolationException("User already has consultation at this time");
         }
+    }
+
+    private String prepareQuery(ConsultationCriteria criteria){
+        String query = Strings.EMPTY;
+        if (Objects.nonNull(criteria.getUnoccupiedOnly()) && criteria.getUnoccupiedOnly().equals(Boolean.TRUE))
+            query = " where consultations.user_id is null";
+        return String.format(SELECT_QUERY, query);
     }
 }
