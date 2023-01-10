@@ -13,9 +13,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LServService {
     private final LServRepository LServRepository;
-    public LServ findById(Long serviceId){
-        Optional<LServ> service = LServRepository.findById(serviceId);
-        if(service.isEmpty()) throw new ResourceNotFoundException("Service (id=" + serviceId + ") does not exist");
+    public LServ findById(Long id){
+        Optional<LServ> service = LServRepository.findById(id);
+        if(service.isEmpty()) throw new ResourceNotFoundException("Service (id=" + id + ") does not exist");
         return service.get();
     }
 

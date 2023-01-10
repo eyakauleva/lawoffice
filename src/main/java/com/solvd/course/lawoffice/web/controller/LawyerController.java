@@ -6,10 +6,7 @@ import com.solvd.course.lawoffice.web.dto.LawyerDto;
 import com.solvd.course.lawoffice.web.mapper.LawyerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +17,13 @@ import java.util.stream.Collectors;
 public class LawyerController {
     private final LawyerService lawyerService;
     private final LawyerMapper lawyerMapper;
+
+    @GetMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public LawyerDto findById(@PathVariable("id") Long id){
+        Lawyer lawyer = lawyerService.findById(id);
+        return lawyerMapper.domainToDto(lawyer);
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

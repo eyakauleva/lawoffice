@@ -4,6 +4,7 @@ import com.solvd.course.lawoffice.domain.exception.ResourceNotFoundException;
 import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,7 +33,7 @@ public class ExceptionHandling {
         return new ExceptionBody(ex.getMessage());
     }
 
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class, BindException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleMethodArgumentTypeMismatchException() {
         return new ExceptionBody("Bad parameters");
@@ -44,9 +45,9 @@ public class ExceptionHandling {
         return new ExceptionBody(ex.getMessage());
     }
 
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionBody handleAllOtherExceptions() {
-        return new ExceptionBody("Internal server error");
-    }
+//    @ExceptionHandler(Throwable.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ExceptionBody handleAllOtherExceptions() {
+//        return new ExceptionBody("Internal server error");
+//    }
 }

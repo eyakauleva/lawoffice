@@ -42,7 +42,7 @@ public class ConsultationController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ConsultationDto> findAll(@RequestBody ConsultationCriteria criteria) {
+    public List<ConsultationDto> findAll(ConsultationCriteria criteria) {
         List<Consultation> consultations = consultationService.findAll(criteria);
         return consultations.stream()
                 .map(consultationMapper::domainToDto)

@@ -17,7 +17,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class AffairRepositoryImpl implements AffairRepository {
     private final DataSource dataSource;
-    private final static String SELECT_BY_STATUS_QUERY
+    private final static String SELECT_QUERY
             = "select count(1) as affairs_count from affairs %s";
 
     @Override
@@ -35,6 +35,8 @@ public class AffairRepositoryImpl implements AffairRepository {
     }
 
     private String prepareQuery(AffairCriteria criteria) {
+        String SELECT_BY_STATUS_QUERY
+                = "select count(1) as affairs_count from affairs %s";
         String query = Strings.EMPTY;
         if (Objects.nonNull(criteria.getStatus())) query = " where status = '" + criteria.getStatus() + "'";
         return String.format(SELECT_BY_STATUS_QUERY, query);
