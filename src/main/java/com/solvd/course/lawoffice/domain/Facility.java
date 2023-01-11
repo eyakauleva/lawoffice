@@ -7,14 +7,14 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class LServ {
+public class Facility {
 
     private Long id;
     private String name;
     private String description;
-    private LServ service;
+    private Facility facility;
 
-    public LServ(Long id) {
+    public Facility(Long id) {
         this.id = id;
     }
 

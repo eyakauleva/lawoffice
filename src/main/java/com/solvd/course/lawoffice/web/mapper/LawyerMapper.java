@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = LServMapper.class)
+@Mapper(componentModel = "spring", uses = FacilityMapper.class)
 public interface LawyerMapper {
 
     LawyerDto domainToDto(Lawyer lawyer);

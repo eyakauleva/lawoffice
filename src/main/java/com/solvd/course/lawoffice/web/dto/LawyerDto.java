@@ -22,6 +22,6 @@ public class LawyerDto extends UserDto {
 
     private Float experience;
 
-    private List<LServDto> services;
+    private List<FacilityDto> facilities;
 
 }

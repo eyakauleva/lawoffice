@@ -4,7 +4,9 @@ import com.solvd.course.lawoffice.domain.consultation.Consultation;
 import com.solvd.course.lawoffice.domain.criteria.ConsultationCriteria;
 import com.solvd.course.lawoffice.service.ConsultationService;
 import com.solvd.course.lawoffice.web.dto.ConsultationDto;
+import com.solvd.course.lawoffice.web.dto.criteria.ConsultationCriteriaDto;
 import com.solvd.course.lawoffice.web.mapper.ConsultationMapper;
+import com.solvd.course.lawoffice.web.mapper.criteria.ConsultationCriteriaMapper;
 import com.solvd.course.lawoffice.web.validation.ComplexTypeGroup;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class ConsultationController {
 
     private final ConsultationService consultationService;
     private final ConsultationMapper consultationMapper;
+    private final ConsultationCriteriaMapper consultationCriteriaMapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
@@ -42,7 +45,8 @@ public class ConsultationController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ConsultationDto> findAll(ConsultationCriteria criteria) {
+    public List<ConsultationDto> findAll(ConsultationCriteriaDto criteriaDto) {
+        ConsultationCriteria criteria = consultationCriteriaMapper.dtoToDomain(criteriaDto);
         List<Consultation> consultations = consultationService.findAll(criteria);
         return consultationMapper.domainToDto(consultations);
     }

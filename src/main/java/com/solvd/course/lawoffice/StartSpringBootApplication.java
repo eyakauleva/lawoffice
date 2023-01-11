@@ -14,6 +14,5 @@ public class StartSpringBootApplication {
 
 //TODO
 // ???  jackson mapper for dates
-// ??? LawyerService class name
 // ??? how to handle HTTP Status 404 – Not Found
-// dto for criteria
+// ??? JSONInclude вешать ли на дто

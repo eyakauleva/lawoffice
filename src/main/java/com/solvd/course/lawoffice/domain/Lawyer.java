@@ -15,7 +15,7 @@ public class Lawyer extends User {
     private Long lawyerId;
     private String description;
     private Float experience;
-    private List<LServ> services;
+    private List<Facility> facilities;
 
     public Lawyer(User user){
         super(user);

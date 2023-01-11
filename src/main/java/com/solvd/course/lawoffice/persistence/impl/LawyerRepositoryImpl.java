@@ -1,9 +1,9 @@
 package com.solvd.course.lawoffice.persistence.impl;
 
-import com.solvd.course.lawoffice.domain.LServ;
+import com.solvd.course.lawoffice.domain.Facility;
 import com.solvd.course.lawoffice.domain.Lawyer;
 import com.solvd.course.lawoffice.persistence.LawyerRepository;
-import com.solvd.course.lawoffice.persistence.mapper.LServMapper;
+import com.solvd.course.lawoffice.persistence.mapper.FacilityMapper;
 import com.solvd.course.lawoffice.persistence.mapper.LawyerMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -45,14 +45,14 @@ public class LawyerRepositoryImpl implements LawyerRepository {
              PreparedStatement st = con.prepareStatement(String.format(SELECT_QUERY, " where lawyers.id = " + id));
              ResultSet rs = st.executeQuery()) {
             Optional<Lawyer> lawyer = Optional.empty();
-            List<LServ> services = new ArrayList<>();
+            List<Facility> facilities = new ArrayList<>();
             while (rs.next()) {
                 if (lawyer.isEmpty()) {
                     lawyer = Optional.of(LawyerMapper.mapRow(rs));
                 }
-                services.add(LServMapper.mapRow(rs));
+                facilities.add(FacilityMapper.mapRow(rs));
             }
-            lawyer.ifPresent(value -> value.setServices(services));
+            lawyer.ifPresent(value -> value.setFacilities(facilities));
             return lawyer;
         }
     }
@@ -69,15 +69,15 @@ public class LawyerRepositoryImpl implements LawyerRepository {
                 Long lawyerId = rs.getLong("lawyer_id");
                 for (Lawyer lawyer : lawyers) {
                     if (lawyer.getLawyerId().equals(lawyerId)) {
-                        List<LServ> services = new ArrayList<>(lawyer.getServices());
-                        services.add(LServMapper.mapRow(rs));
-                        lawyer.setServices(services);
+                        List<Facility> facilities = new ArrayList<>(lawyer.getFacilities());
+                        facilities.add(FacilityMapper.mapRow(rs));
+                        lawyer.setFacilities(facilities);
                         doesListContainLawyer = true;
                     }
                 }
                 if (!doesListContainLawyer) {
                     Lawyer newLawyer = LawyerMapper.mapRow(rs);
-                    newLawyer.setServices(Collections.singletonList(LServMapper.mapRow(rs)));
+                    newLawyer.setFacilities(Collections.singletonList(FacilityMapper.mapRow(rs)));
                     lawyers.add(newLawyer);
                 }
             }

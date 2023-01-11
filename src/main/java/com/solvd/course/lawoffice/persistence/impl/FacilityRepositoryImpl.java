@@ -1,8 +1,8 @@
 package com.solvd.course.lawoffice.persistence.impl;
 
-import com.solvd.course.lawoffice.domain.LServ;
-import com.solvd.course.lawoffice.persistence.LServRepository;
-import com.solvd.course.lawoffice.persistence.mapper.LServMapper;
+import com.solvd.course.lawoffice.domain.Facility;
+import com.solvd.course.lawoffice.persistence.FacilityRepository;
+import com.solvd.course.lawoffice.persistence.mapper.FacilityMapper;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
-public class LServRepositoryImpl implements LServRepository {
+public class FacilityRepositoryImpl implements FacilityRepository {
 
     private final DataSource dataSource;
 
@@ -30,29 +30,29 @@ public class LServRepositoryImpl implements LServRepository {
 
     @Override
     @SneakyThrows
-    public Optional<LServ> findById(Long serviceId) {
+    public Optional<Facility> findById(Long serviceId) {
         try (Connection con = dataSource.getConnection();
              PreparedStatement st = con.prepareStatement(String.format(SELECT_QUERY, " where services.id=" + serviceId + ""));
              ResultSet rs = st.executeQuery()) {
-            Optional<LServ> service = Optional.empty();
+            Optional<Facility> facility = Optional.empty();
             while (rs.next()) {
-                service = Optional.of(LServMapper.mapRow(rs));
+                facility = Optional.of(FacilityMapper.mapRow(rs));
             }
-            return service;
+            return facility;
         }
     }
 
     @Override
     @SneakyThrows
-    public List<LServ> findAll() {
+    public List<Facility> findAll() {
         try (Connection con = dataSource.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(String.format(SELECT_QUERY, Strings.EMPTY))) {
-            List<LServ> services = new ArrayList<>();
+            List<Facility> facilities = new ArrayList<>();
             while (rs.next()) {
-                services.add(LServMapper.mapRow(rs));
+                facilities.add(FacilityMapper.mapRow(rs));
             }
-            return services;
+            return facilities;
         }
     }
 

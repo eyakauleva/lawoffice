@@ -21,7 +21,10 @@ public class ConsultationMapper {
         consultation.setId(rs.getLong("consultation_id"));
         consultation.setVisitTime(rs.getTimestamp("consultation_visit_time").toLocalDateTime());
         consultation.setLawyer(lawyer);
-        consultation.setClient(new User(rs.getLong("consultation_client_id")));
+        long clientId = rs.getLong("consultation_client_id");
+        if(clientId != 0) {
+            consultation.setClient(new User(clientId));
+        }
         return consultation;
     }
 

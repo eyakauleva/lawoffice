@@ -9,11 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-public class LServDto {
+public class FacilityDto {
 
     private Long id;
     private String name;
     private String description;
-    private LServDto service;
+    private FacilityDto facility;
 
 }
