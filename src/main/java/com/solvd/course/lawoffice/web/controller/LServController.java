@@ -9,12 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/services")
 @RequiredArgsConstructor
 public class LServController {
+
     private final LServService LServService;
     private final LServMapper LServMapper;
 
@@ -29,8 +29,7 @@ public class LServController {
     @ResponseStatus(HttpStatus.OK)
     public List<LServDto> findAll() {
         List<LServ> services = LServService.findAll();
-        return services.stream()
-                .map(LServMapper::domainToDto)
-                .collect(Collectors.toList());
+        return LServMapper.domainToDto(services);
     }
+
 }

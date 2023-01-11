@@ -8,12 +8,14 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class LServ {
+
     private Long id;
     private String name;
     private String description;
-    private LServ LServ;
+    private LServ service;
 
     public LServ(Long id) {
         this.id = id;
     }
+
 }

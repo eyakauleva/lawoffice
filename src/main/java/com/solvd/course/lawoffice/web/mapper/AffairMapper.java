@@ -6,6 +6,9 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = {UserMapper.class, LawyerMapper.class})
 public interface AffairMapper {
+
     LawyerDto domainToDto(Lawyer lawyer);
+
     Lawyer dtoToDomain(LawyerDto lawyerDto);
+
 }

@@ -10,8 +10,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class LServDto {
+
     private Long id;
     private String name;
     private String description;
     private LServDto service;
+
 }

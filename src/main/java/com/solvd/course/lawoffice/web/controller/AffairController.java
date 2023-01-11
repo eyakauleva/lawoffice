@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/affairs")
 @RequiredArgsConstructor
 public class AffairController {
+
     private final AffairService affairService;
 
     @GetMapping("/count")
     @ResponseStatus(HttpStatus.OK)
-    public Integer countByStatus(AffairCriteria criteria) {
-        return affairService.countByStatus(criteria);
+    public Integer countByCriteria(AffairCriteria criteria) {
+        return affairService.countByCriteria(criteria);
     }
+
 }

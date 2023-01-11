@@ -1,6 +1,6 @@
 package com.solvd.course.lawoffice.web.controller;
 
-import com.solvd.course.lawoffice.domain.Consultation;
+import com.solvd.course.lawoffice.domain.consultation.Consultation;
 import com.solvd.course.lawoffice.domain.criteria.ConsultationCriteria;
 import com.solvd.course.lawoffice.service.ConsultationService;
 import com.solvd.course.lawoffice.web.dto.ConsultationDto;
@@ -13,13 +13,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/consultations")
 @RequiredArgsConstructor
 @Validated
 public class ConsultationController {
+
     private final ConsultationService consultationService;
     private final ConsultationMapper consultationMapper;
 
@@ -44,8 +44,7 @@ public class ConsultationController {
     @ResponseStatus(HttpStatus.OK)
     public List<ConsultationDto> findAll(ConsultationCriteria criteria) {
         List<Consultation> consultations = consultationService.findAll(criteria);
-        return consultations.stream()
-                .map(consultationMapper::domainToDto)
-                .collect(Collectors.toList());
+        return consultationMapper.domainToDto(consultations);
     }
+
 }

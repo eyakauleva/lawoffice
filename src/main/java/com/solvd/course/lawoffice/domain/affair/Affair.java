@@ -1,5 +1,6 @@
-package com.solvd.course.lawoffice.domain;
+package com.solvd.course.lawoffice.domain.affair;
 
+import com.solvd.course.lawoffice.domain.user.User;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,20 +8,20 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Affair {
+
     private Long id;
-    private User user;
+    private User client;
     private String name;
-    private String status;
+    private AffairStatus status;
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
     private BigDecimal price;
-    private List<Lawyer> lawyers;
+
 }

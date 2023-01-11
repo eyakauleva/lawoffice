@@ -12,12 +12,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/reviews")
 @RequiredArgsConstructor
 public class ReviewController {
+
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;
 
@@ -48,8 +48,7 @@ public class ReviewController {
     @ResponseStatus(HttpStatus.OK)
     public List<ReviewDto> findAll() {
         List<Review> reviews = reviewService.findAll();
-        return reviews.stream()
-                .map(reviewMapper::domainToDto)
-                .collect(Collectors.toList());
+        return reviewMapper.domainToDto(reviews);
     }
+
 }

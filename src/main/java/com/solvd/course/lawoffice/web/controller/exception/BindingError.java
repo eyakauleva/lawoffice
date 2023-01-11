@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ValidationError {
-    private String objectName;
-    private String fieldName;
+public class BindingError {
+
+    private String field;
     private String message;
+
 }

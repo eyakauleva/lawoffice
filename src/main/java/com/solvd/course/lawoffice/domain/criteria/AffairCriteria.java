@@ -1,6 +1,6 @@
 package com.solvd.course.lawoffice.domain.criteria;
 
-import com.solvd.course.lawoffice.domain.enums.AffairStatus;
+import com.solvd.course.lawoffice.domain.affair.AffairStatus;
 import lombok.*;
 
 @Getter
@@ -8,5 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class AffairCriteria {
+
     private AffairStatus status;
+
 }

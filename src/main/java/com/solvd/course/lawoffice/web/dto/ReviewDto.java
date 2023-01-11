@@ -18,16 +18,22 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class ReviewDto {
+
     private Long id;
+
     @NotBlank(groups = CreateGroup.class, message = "Review's description cannot be blank")
     @Size(max = 1000, message = "Review's description max length is 1000")
     private String description;
+
     @NotNull(groups = CreateGroup.class, message = "Review's grade cannot be null")
     private Integer grade;
+
     @NotNull(groups = CreateGroup.class, message = "Review's creation time cannot be null")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime reviewTime;
+
     @NotNull(groups = CreateGroup.class, message = "Review must contain a client")
     @Valid
-    private UserDto user;
+    private UserDto client;
+
 }

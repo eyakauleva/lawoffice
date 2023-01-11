@@ -1,5 +1,6 @@
 package com.solvd.course.lawoffice.domain;
 
+import com.solvd.course.lawoffice.domain.user.User;
 import lombok.*;
 
 import java.util.List;
@@ -8,23 +9,28 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-public class Lawyer {
-    private Long id;
+@EqualsAndHashCode(callSuper = false)
+public class Lawyer extends User {
+
+    private Long lawyerId;
     private String description;
     private Float experience;
-    private User user;
-    private List<LServ> LServs;
+    private List<LServ> services;
 
-    public Lawyer(Long id, User user) {
-        this.id = id;
-        this.user = user;
+    public Lawyer(User user){
+        super(user);
     }
 
-    public Lawyer(Long id, String description, Float experience, User user) {
-        this.id = id;
+    public Lawyer(Long lawyerId, User user) {
+        super(user);
+        this.lawyerId = lawyerId;
+    }
+
+    public Lawyer(Long lawyerId, String description, Float experience, User user) {
+        super(user);
+        this.lawyerId = lawyerId;
         this.description = description;
         this.experience = experience;
-        this.user = user;
     }
+
 }

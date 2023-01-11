@@ -1,6 +1,7 @@
 package com.solvd.course.lawoffice.web.dto;
 
-import com.solvd.course.lawoffice.domain.enums.AffairStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.solvd.course.lawoffice.domain.affair.AffairStatus;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,13 +16,25 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class AffairDto {
+
     private Long id;
-    private UserDto user;
+
+    private UserDto client;
+
     private String name;
+
     private AffairStatus status;
+
     private String description;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
+
     private BigDecimal price;
+
     private List<LawyerDto> lawyers;
+
 }

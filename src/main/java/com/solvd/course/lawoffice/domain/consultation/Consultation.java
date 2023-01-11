@@ -1,5 +1,7 @@
-package com.solvd.course.lawoffice.domain;
+package com.solvd.course.lawoffice.domain.consultation;
 
+import com.solvd.course.lawoffice.domain.Lawyer;
+import com.solvd.course.lawoffice.domain.user.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -10,8 +12,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class Consultation {
+
     private Long id;
     private LocalDateTime visitTime;
     private Lawyer lawyer;
-    private User user;
+    private User client;
+
 }
