@@ -47,7 +47,7 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
     public void create(Consultation consultation) {
         try (Connection con = dataSource.getConnection();
              PreparedStatement st = con.prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
-            st.setLong(1, consultation.getLawyer().getUserId());
+            st.setLong(1, consultation.getLawyer().getLawyerId());
             if (Objects.isNull(consultation.getClient())) {
                 st.setNull(2, Types.BIGINT);
             } else {
@@ -66,10 +66,9 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
     @Override
     @SneakyThrows
     public void update(Consultation consultation) {
-        checkConsultationOnUniqueConstraints(consultation);
         try (Connection con = dataSource.getConnection();
              PreparedStatement st = con.prepareStatement(UPDATE_QUERY)) {
-            st.setLong(1, consultation.getLawyer().getUserId());
+            st.setLong(1, consultation.getLawyer().getLawyerId());
             if (Objects.isNull(consultation.getClient())) {
                 st.setNull(2, Types.BIGINT);
             } else {
@@ -114,7 +113,9 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
     public void checkConsultationOnUniqueConstraints(Consultation consultation) {
         try (Connection con = dataSource.getConnection();
              CallableStatement st = con.prepareCall(CALL_CHECK_CONSULTATION_ON_UNIQUE_CONSTRAINTS_PROCEDURE)) {
-            st.setLong(1, consultation.getLawyer().getUserId());
+            //st.setLong(1, consultation.getLawyer().getLawyerId());
+            if (Objects.isNull(consultation.getLawyer())) st.setNull(1, Types.BIGINT);
+            else st.setLong(1, consultation.getLawyer().getLawyerId());
             if (Objects.isNull(consultation.getClient())) st.setNull(2, Types.BIGINT);
             else st.setLong(2, consultation.getClient().getUserId());
             st.setTimestamp(3, Timestamp.valueOf(consultation.getVisitTime()));

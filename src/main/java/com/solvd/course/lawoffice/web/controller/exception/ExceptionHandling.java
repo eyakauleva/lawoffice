@@ -1,8 +1,10 @@
 package com.solvd.course.lawoffice.web.controller.exception;
 
+import com.solvd.course.lawoffice.domain.consultation.ValidationException;
 import com.solvd.course.lawoffice.domain.exception.ResourceNotFoundException;
 import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestControllerAdvice
@@ -30,15 +33,22 @@ public class ExceptionHandling {
         return new ExceptionBody("Binding errors", bindingErrors);
     }
 
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handleValidationException(ValidationException ex) {
+        BindingError bindingError = new BindingError(ex.getField(), ex.getFieldMessage());
+        return new ExceptionBody(ex.getMessage(), Collections.singletonList(bindingError));
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionBody handleResourceNotFoundException(ResourceNotFoundException ex) {
         return new ExceptionBody(ex.getMessage());
     }
 
-    @ExceptionHandler(UniqueConstraintViolationException.class)
+    @ExceptionHandler({UniqueConstraintViolationException.class, IllegalArgumentException.class, HttpMessageNotReadableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handleUniqueConstraintViolationException(UniqueConstraintViolationException ex) {
+    public ExceptionBody handleBadRequestsExceptions(Exception ex) {
         return new ExceptionBody(ex.getMessage());
     }
 

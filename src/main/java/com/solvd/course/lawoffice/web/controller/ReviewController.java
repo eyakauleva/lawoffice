@@ -4,7 +4,7 @@ import com.solvd.course.lawoffice.domain.Review;
 import com.solvd.course.lawoffice.service.ReviewService;
 import com.solvd.course.lawoffice.web.dto.ReviewDto;
 import com.solvd.course.lawoffice.web.mapper.ReviewMapper;
-import com.solvd.course.lawoffice.web.validation.ComplexTypeGroup;
+import com.solvd.course.lawoffice.web.validation.ClientIdRequiredGroup;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class ReviewController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public ReviewDto create(@RequestBody @Validated({CreateGroup.class, ComplexTypeGroup.class}) ReviewDto reviewDto) {
+    public ReviewDto create(@RequestBody @Validated({CreateGroup.class, ClientIdRequiredGroup.class}) ReviewDto reviewDto) {
         Review review = reviewMapper.dtoToDomain(reviewDto);
         review = reviewService.create(review);
         return reviewMapper.domainToDto(review);
@@ -31,7 +31,7 @@ public class ReviewController {
 
     @PatchMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ReviewDto update(@RequestBody @Validated(ComplexTypeGroup.class) ReviewDto reviewDto, @PathVariable("id") Long id) {
+    public ReviewDto update(@RequestBody @Validated(ClientIdRequiredGroup.class) ReviewDto reviewDto, @PathVariable("id") Long id) {
         reviewDto.setId(id);
         Review review = reviewMapper.dtoToDomain(reviewDto);
         review = reviewService.update(review);

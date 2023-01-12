@@ -5,9 +5,9 @@ spring:
     password: system
   sql:
     init:
-      mode:
-        always
+      mode: always
+  jackson:
+    default-property-inclusion: non_null
 server:
   servlet:
-    context-path:
-      /api/v1
+    context-path: /api/v1

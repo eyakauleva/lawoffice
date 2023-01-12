@@ -16,7 +16,7 @@ public class ConsultationMapper {
         user.setName(rs.getString("lawyer_user_name"));
         user.setSurname(rs.getString("lawyer_user_surname"));
         Lawyer lawyer = new Lawyer(user);
-        lawyer.setUserId(rs.getLong("consultation_lawyer_id"));
+        lawyer.setLawyerId(rs.getLong("consultation_lawyer_id"));
         Consultation consultation = new Consultation();
         consultation.setId(rs.getLong("consultation_id"));
         consultation.setVisitTime(rs.getTimestamp("consultation_visit_time").toLocalDateTime());

@@ -1,6 +1,6 @@
 package com.solvd.course.lawoffice.web.dto;
 
-import com.solvd.course.lawoffice.web.validation.ComplexTypeGroup;
+import com.solvd.course.lawoffice.web.validation.LawyerIdRequiredGroup;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class LawyerDto extends UserDto {
 
-    @NotNull(groups = ComplexTypeGroup.class, message = "Lawyer's id cannot be null")
+    @NotNull(groups = LawyerIdRequiredGroup.class, message = "Lawyer's id cannot be null")
     private Long lawyerId;
 
     private String description;

@@ -1,6 +1,5 @@
 package com.solvd.course.lawoffice.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -29,7 +28,6 @@ public class ReviewDto {
     private Integer grade;
 
     @NotNull(groups = CreateGroup.class, message = "Review's creation time cannot be null")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime reviewTime;
 
     @NotNull(groups = CreateGroup.class, message = "Review must contain a client")

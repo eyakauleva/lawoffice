@@ -27,17 +27,23 @@ public class ReviewServiceImpl implements ReviewService {
     public Review update(Review review) {
         Review initialReview = reviewRepository.findById(review.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Review (id=" + review.getId() + ") does not exist"));
+        boolean doesContainNewData = false;
         if (Objects.nonNull(review.getDescription())) {
             initialReview.setDescription(review.getDescription());
+            doesContainNewData = true;
         }
         if (Objects.nonNull(review.getGrade())) {
             initialReview.setGrade(review.getGrade());
+            doesContainNewData = true;
         }
         if (Objects.nonNull(review.getClient())) {
             initialReview.setClient(review.getClient());
+            doesContainNewData = true;
         }
-        reviewRepository.update(review);
-        return review;
+        if(doesContainNewData){
+            reviewRepository.update(initialReview);
+        }
+        return initialReview;
     }
 
     @Transactional

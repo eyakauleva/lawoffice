@@ -20,14 +20,13 @@ public class ConsultationDto {
     private Long id;
 
     @NotNull(groups = CreateGroup.class, message = "Consultation's visit time cannot be null")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat
     private LocalDateTime visitTime;
 
     @NotNull(groups = CreateGroup.class, message = "Consultation must contain a lawyer")
     @Valid
     private LawyerDto lawyer;
 
-    @Valid
     private UserDto client;
 
 }
