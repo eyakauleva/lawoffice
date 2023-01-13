@@ -31,7 +31,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     private final static String SELECT_QUERY
             = "select reviews.id review_id, reviews.description review_description, " +
             "reviews.grade review_grade, reviews.review_time review_time, " +
-            "users.id user_id, users.name user_name, users.surname user_surname " +
+            "users.name user_name, users.surname user_surname " +
             "from reviews inner join users on users.id = reviews.user_id %s;";
 
     @Override

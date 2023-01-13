@@ -2,15 +2,15 @@ package com.solvd.course.lawoffice.domain.consultation;
 
 import com.solvd.course.lawoffice.domain.Lawyer;
 import com.solvd.course.lawoffice.domain.user.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class Consultation {
 
     private Long id;

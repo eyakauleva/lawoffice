@@ -14,7 +14,7 @@ public interface ConsultationRepository {
 
     Optional<Consultation> findById(Long id);
 
-    List<Consultation> findAll(ConsultationCriteria criteria);
+    List<Consultation> findAllByCriteria(ConsultationCriteria criteria);
 
     void checkConsultationOnUniqueConstraints(Consultation consultation);
 

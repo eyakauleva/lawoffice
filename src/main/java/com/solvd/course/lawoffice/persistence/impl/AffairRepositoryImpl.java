@@ -38,7 +38,9 @@ public class AffairRepositoryImpl implements AffairRepository {
 
     private String prepareQuery(AffairCriteria criteria) {
         String query = Strings.EMPTY;
-        if (Objects.nonNull(criteria.getStatus())) query = " where status = '" + criteria.getStatus() + "'";
+        if (Objects.nonNull(criteria.getStatus())) {
+            query = " where status = '" + criteria.getStatus() + "'";
+        }
         return String.format(SELECT_QUERY, query);
     }
 

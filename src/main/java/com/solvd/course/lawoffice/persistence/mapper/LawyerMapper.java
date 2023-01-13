@@ -24,6 +24,7 @@ public class LawyerMapper {
         lawyer.setLawyerId(rs.getLong("lawyer_id"));
         lawyer.setDescription(rs.getString("lawyer_description"));
         lawyer.setExperience(rs.getFloat("lawyer_experience"));
+        lawyer.setStartDate(rs.getDate("lawyer_start_date").toLocalDate());
         return lawyer;
     }
 

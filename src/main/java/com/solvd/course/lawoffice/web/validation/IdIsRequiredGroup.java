@@ -1,4 +1,4 @@
 package com.solvd.course.lawoffice.web.validation;
 
-public interface ClientIdRequiredGroup {
+public interface IdIsRequiredGroup {
 }

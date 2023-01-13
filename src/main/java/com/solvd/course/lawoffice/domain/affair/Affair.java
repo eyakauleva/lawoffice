@@ -1,18 +1,14 @@
 package com.solvd.course.lawoffice.domain.affair;
 
 import com.solvd.course.lawoffice.domain.user.User;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@EqualsAndHashCode
 public class Affair {
 
     private Long id;

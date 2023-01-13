@@ -1,7 +1,7 @@
 package com.solvd.course.lawoffice.service.impl;
 
 import com.solvd.course.lawoffice.domain.Facility;
-import com.solvd.course.lawoffice.domain.exception.ResourceNotFoundException;
+import com.solvd.course.lawoffice.domain.exception.ResourceDoesNotExistException;
 import com.solvd.course.lawoffice.persistence.FacilityRepository;
 import com.solvd.course.lawoffice.service.FacilityService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class FacilityServiceImpl implements FacilityService {
 
     public Facility findById(Long id) {
         return facilityRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Facility (id=" + id + ") does not exist"));
+                .orElseThrow(() -> new ResourceDoesNotExistException("Facility (id=" + id + ") does not exist"));
     }
 
     public List<Facility> findAll() {

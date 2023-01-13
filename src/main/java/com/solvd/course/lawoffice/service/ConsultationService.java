@@ -11,6 +11,6 @@ public interface ConsultationService {
 
     Consultation update(Consultation consultation);
 
-    List<Consultation> findAll(ConsultationCriteria criteria);
+    List<Consultation> findAllByCriteria(ConsultationCriteria criteria);
 
 }

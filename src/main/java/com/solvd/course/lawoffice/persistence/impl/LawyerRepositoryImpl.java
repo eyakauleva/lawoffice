@@ -28,7 +28,8 @@ public class LawyerRepositoryImpl implements LawyerRepository {
 
     private final static String SELECT_QUERY
             = "select lawyers.id lawyer_id, lawyers.description lawyer_description, " +
-            "lawyers.experience lawyer_experience, users.id user_id, users.role user_role, " +
+            "lawyers.experience lawyer_experience, lawyers.start_date lawyer_start_date, " +
+            "users.id user_id, users.role user_role, " +
             "users.name user_name, users.surname user_surname, users.email user_email, " +
             "users.phone user_phone, users.status user_status, " +
             "services.id service_id, services.service_id service_parent_id, " +

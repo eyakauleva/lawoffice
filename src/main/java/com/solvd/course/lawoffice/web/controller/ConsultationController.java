@@ -8,9 +8,8 @@ import com.solvd.course.lawoffice.web.dto.criteria.ConsultationCriteriaDto;
 import com.solvd.course.lawoffice.web.mapper.ConsultationMapper;
 import com.solvd.course.lawoffice.web.mapper.criteria.ConsultationCriteriaMapper;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
-import com.solvd.course.lawoffice.web.validation.LawyerIdRequiredGroup;
+import com.solvd.course.lawoffice.web.validation.IdIsRequiredGroup;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,16 +26,15 @@ public class ConsultationController {
     private final ConsultationCriteriaMapper consultationCriteriaMapper;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public ConsultationDto create(@RequestBody @Validated({CreateGroup.class, LawyerIdRequiredGroup.class}) ConsultationDto consultationDto) {
+    public ConsultationDto create(@RequestBody @Validated({CreateGroup.class, IdIsRequiredGroup.class}) ConsultationDto consultationDto) {
         Consultation consultation = consultationMapper.dtoToDomain(consultationDto);
         consultation = consultationService.create(consultation);
         return consultationMapper.domainToDto(consultation);
     }
 
     @PatchMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ConsultationDto update(@RequestBody @Validated({LawyerIdRequiredGroup.class}) ConsultationDto consultationDto, @PathVariable("id") Long id) {
+    public ConsultationDto update(@RequestBody @Validated({IdIsRequiredGroup.class}) ConsultationDto consultationDto,
+                                  @PathVariable("id") Long id) {
         consultationDto.setId(id);
         Consultation consultation = consultationMapper.dtoToDomain(consultationDto);
         consultation = consultationService.update(consultation);
@@ -44,10 +42,9 @@ public class ConsultationController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<ConsultationDto> findAll(ConsultationCriteriaDto criteriaDto) {
+    public List<ConsultationDto> findAllByCriteria(ConsultationCriteriaDto criteriaDto) {
         ConsultationCriteria criteria = consultationCriteriaMapper.dtoToDomain(criteriaDto);
-        List<Consultation> consultations = consultationService.findAll(criteria);
+        List<Consultation> consultations = consultationService.findAllByCriteria(criteria);
         return consultationMapper.domainToDto(consultations);
     }
 

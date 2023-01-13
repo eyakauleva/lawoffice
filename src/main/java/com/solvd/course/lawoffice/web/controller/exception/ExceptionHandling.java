@@ -1,7 +1,7 @@
 package com.solvd.course.lawoffice.web.controller.exception;
 
 import com.solvd.course.lawoffice.domain.consultation.ValidationException;
-import com.solvd.course.lawoffice.domain.exception.ResourceNotFoundException;
+import com.solvd.course.lawoffice.domain.exception.ResourceDoesNotExistException;
 import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -40,9 +40,9 @@ public class ExceptionHandling {
         return new ExceptionBody(ex.getMessage(), Collections.singletonList(bindingError));
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler(ResourceDoesNotExistException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionBody handleResourceNotFoundException(ResourceNotFoundException ex) {
+    public ExceptionBody handleResourceNotFoundException(ResourceDoesNotExistException ex) {
         return new ExceptionBody(ex.getMessage());
     }
 

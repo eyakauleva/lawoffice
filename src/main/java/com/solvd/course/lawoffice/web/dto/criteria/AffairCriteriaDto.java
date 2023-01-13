@@ -1,16 +1,13 @@
 package com.solvd.course.lawoffice.web.dto.criteria;
 
+import com.solvd.course.lawoffice.domain.affair.AffairStatus;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class AffairCriteriaDto {
 
-    private String status;
+    private AffairStatus status;
 
 }

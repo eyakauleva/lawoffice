@@ -97,7 +97,7 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
 
     @Override
     @SneakyThrows
-    public List<Consultation> findAll(ConsultationCriteria criteria) {
+    public List<Consultation> findAllByCriteria(ConsultationCriteria criteria) {
         try (Connection con = dataSource.getConnection();
              PreparedStatement st = con.prepareStatement(prepareQuery(criteria));
              ResultSet rs = st.executeQuery()) {
@@ -113,11 +113,16 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
     public void checkConsultationOnUniqueConstraints(Consultation consultation) {
         try (Connection con = dataSource.getConnection();
              CallableStatement st = con.prepareCall(CALL_CHECK_CONSULTATION_ON_UNIQUE_CONSTRAINTS_PROCEDURE)) {
-            //st.setLong(1, consultation.getLawyer().getLawyerId());
-            if (Objects.isNull(consultation.getLawyer())) st.setNull(1, Types.BIGINT);
-            else st.setLong(1, consultation.getLawyer().getLawyerId());
-            if (Objects.isNull(consultation.getClient())) st.setNull(2, Types.BIGINT);
-            else st.setLong(2, consultation.getClient().getUserId());
+            if (Objects.isNull(consultation.getLawyer())) {
+                st.setNull(1, Types.BIGINT);
+            } else {
+                st.setLong(1, consultation.getLawyer().getLawyerId());
+            }
+            if (Objects.isNull(consultation.getClient())) {
+                st.setNull(2, Types.BIGINT);
+            } else {
+                st.setLong(2, consultation.getClient().getUserId());
+            }
             st.setTimestamp(3, Timestamp.valueOf(consultation.getVisitTime()));
             st.registerOutParameter(4, Types.INTEGER);
             st.executeUpdate();
@@ -132,8 +137,9 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
 
     private String prepareQuery(ConsultationCriteria criteria) {
         String query = Strings.EMPTY;
-        if (Objects.nonNull(criteria.getUnoccupiedOnly()) && criteria.getUnoccupiedOnly().equals(Boolean.TRUE))
+        if (Objects.nonNull(criteria.getUnoccupiedOnly()) && criteria.getUnoccupiedOnly().equals(Boolean.TRUE)) {
             query = " where consultations.user_id is null";
+        }
         return String.format(SELECT_QUERY, query);
     }
 

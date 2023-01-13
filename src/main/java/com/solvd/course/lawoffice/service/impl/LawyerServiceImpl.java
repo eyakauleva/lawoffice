@@ -1,7 +1,7 @@
 package com.solvd.course.lawoffice.service.impl;
 
 import com.solvd.course.lawoffice.domain.Lawyer;
-import com.solvd.course.lawoffice.domain.exception.ResourceNotFoundException;
+import com.solvd.course.lawoffice.domain.exception.ResourceDoesNotExistException;
 import com.solvd.course.lawoffice.persistence.LawyerRepository;
 import com.solvd.course.lawoffice.service.LawyerService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class LawyerServiceImpl implements LawyerService {
 
     public Lawyer findById(Long id) {
         return lawyerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Lawyer (id=" + id + ") does not exist"));
+                .orElseThrow(() -> new ResourceDoesNotExistException("Lawyer (id=" + id + ") does not exist"));
     }
 
     public List<Lawyer> findAll() {

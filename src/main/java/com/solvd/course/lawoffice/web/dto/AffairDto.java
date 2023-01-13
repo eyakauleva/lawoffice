@@ -1,19 +1,15 @@
 package com.solvd.course.lawoffice.web.dto;
 
 import com.solvd.course.lawoffice.domain.affair.AffairStatus;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@EqualsAndHashCode
 public class AffairDto {
 
     private Long id;

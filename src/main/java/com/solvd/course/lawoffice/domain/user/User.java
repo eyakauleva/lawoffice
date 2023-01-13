@@ -1,12 +1,12 @@
 package com.solvd.course.lawoffice.domain.user;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class User {
 
     private Long userId;
@@ -27,7 +27,7 @@ public class User {
         this.surname = surname;
     }
 
-    public User(User user){
+    public User(User user) {
         this.userId = user.getUserId();
         this.name = user.getName();
         this.surname = user.getSurname();
