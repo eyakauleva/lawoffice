@@ -1,8 +1,8 @@
-package com.solvd.course.lawoffice.persistence.impl;
+package com.solvd.course.lawoffice.persistence.jdbc.impl;
 
 import com.solvd.course.lawoffice.domain.Facility;
 import com.solvd.course.lawoffice.persistence.FacilityRepository;
-import com.solvd.course.lawoffice.persistence.mapper.FacilityMapper;
+import com.solvd.course.lawoffice.persistence.jdbc.mapper.FacilityMapper;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;

@@ -1,4 +1,4 @@
-package com.solvd.course.lawoffice.persistence.impl;
+package com.solvd.course.lawoffice.persistence.jdbc.impl;
 
 import com.solvd.course.lawoffice.domain.criteria.AffairCriteria;
 import com.solvd.course.lawoffice.persistence.AffairRepository;

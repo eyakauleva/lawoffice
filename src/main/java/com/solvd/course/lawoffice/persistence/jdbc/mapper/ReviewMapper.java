@@ -1,4 +1,4 @@
-package com.solvd.course.lawoffice.persistence.mapper;
+package com.solvd.course.lawoffice.persistence.jdbc.mapper;
 
 import com.solvd.course.lawoffice.domain.Review;
 import com.solvd.course.lawoffice.domain.user.User;

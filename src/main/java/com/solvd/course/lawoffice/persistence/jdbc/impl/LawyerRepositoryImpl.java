@@ -1,10 +1,10 @@
-package com.solvd.course.lawoffice.persistence.impl;
+package com.solvd.course.lawoffice.persistence.jdbc.impl;
 
 import com.solvd.course.lawoffice.domain.Facility;
 import com.solvd.course.lawoffice.domain.Lawyer;
 import com.solvd.course.lawoffice.persistence.LawyerRepository;
-import com.solvd.course.lawoffice.persistence.mapper.FacilityMapper;
-import com.solvd.course.lawoffice.persistence.mapper.LawyerMapper;
+import com.solvd.course.lawoffice.persistence.jdbc.mapper.FacilityMapper;
+import com.solvd.course.lawoffice.persistence.jdbc.mapper.LawyerMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;

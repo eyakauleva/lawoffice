@@ -5,12 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConsultationCriteria {
 
-    private Boolean unoccupiedOnly;
+    private boolean unoccupiedOnly;
+    private Long lawyerId;
+    private Long clientId;
+    private LocalDateTime visitTime;
 
 }

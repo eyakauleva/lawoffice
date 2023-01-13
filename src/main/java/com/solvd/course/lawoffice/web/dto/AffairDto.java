@@ -13,21 +13,13 @@ import java.util.List;
 public class AffairDto {
 
     private Long id;
-
     private UserDto client;
-
     private String name;
-
     private AffairStatus status;
-
     private String description;
-
     private LocalDate startDate;
-
     private LocalDate endDate;
-
     private BigDecimal price;
-
     private List<LawyerDto> lawyers;
 
 }

@@ -8,7 +8,7 @@ import com.solvd.course.lawoffice.web.dto.criteria.ConsultationCriteriaDto;
 import com.solvd.course.lawoffice.web.mapper.ConsultationMapper;
 import com.solvd.course.lawoffice.web.mapper.criteria.ConsultationCriteriaMapper;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
-import com.solvd.course.lawoffice.web.validation.IdIsRequiredGroup;
+import com.solvd.course.lawoffice.web.validation.LawyerIdRequiredGroup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/consultations")
+@RequestMapping(value = "/api/v1/consultations")
 @RequiredArgsConstructor
 @Validated
 public class ConsultationController {
@@ -26,14 +26,14 @@ public class ConsultationController {
     private final ConsultationCriteriaMapper consultationCriteriaMapper;
 
     @PostMapping
-    public ConsultationDto create(@RequestBody @Validated({CreateGroup.class, IdIsRequiredGroup.class}) ConsultationDto consultationDto) {
+    public ConsultationDto create(@RequestBody @Validated({CreateGroup.class, LawyerIdRequiredGroup.class}) ConsultationDto consultationDto) {
         Consultation consultation = consultationMapper.dtoToDomain(consultationDto);
         consultation = consultationService.create(consultation);
         return consultationMapper.domainToDto(consultation);
     }
 
     @PatchMapping(value = "/{id}")
-    public ConsultationDto update(@RequestBody @Validated({IdIsRequiredGroup.class}) ConsultationDto consultationDto,
+    public ConsultationDto update(@RequestBody @Validated({LawyerIdRequiredGroup.class}) ConsultationDto consultationDto,
                                   @PathVariable("id") Long id) {
         consultationDto.setId(id);
         Consultation consultation = consultationMapper.dtoToDomain(consultationDto);

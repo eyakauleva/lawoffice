@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ConsultationCriteriaDto {
 
-    private Boolean unoccupiedOnly;
+    private boolean unoccupiedOnly;
 
 }

@@ -1,22 +1,16 @@
-package com.solvd.course.lawoffice.persistence.impl;
+package com.solvd.course.lawoffice.persistence.jdbc.impl;
 
 import com.solvd.course.lawoffice.domain.consultation.Consultation;
-import com.solvd.course.lawoffice.domain.consultation.ConsultationUniqueConstraint;
 import com.solvd.course.lawoffice.domain.criteria.ConsultationCriteria;
-import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
 import com.solvd.course.lawoffice.persistence.ConsultationRepository;
-import com.solvd.course.lawoffice.persistence.mapper.ConsultationMapper;
+import com.solvd.course.lawoffice.persistence.jdbc.mapper.ConsultationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,10 +31,6 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
             "from consultations " +
             "inner join lawyers on lawyers.id = consultations.lawyer_id " +
             "inner join users on users.id = lawyers.user_id %s;";
-
-
-    private final static String CALL_CHECK_CONSULTATION_ON_UNIQUE_CONSTRAINTS_PROCEDURE
-            = "call check_consultation_on_unique_constraints(?, ?, ?, ?);";
 
     @Override
     @SneakyThrows
@@ -109,38 +99,21 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
         }
     }
 
-    @SneakyThrows
-    public void checkConsultationOnUniqueConstraints(Consultation consultation) {
-        try (Connection con = dataSource.getConnection();
-             CallableStatement st = con.prepareCall(CALL_CHECK_CONSULTATION_ON_UNIQUE_CONSTRAINTS_PROCEDURE)) {
-            if (Objects.isNull(consultation.getLawyer())) {
-                st.setNull(1, Types.BIGINT);
-            } else {
-                st.setLong(1, consultation.getLawyer().getLawyerId());
-            }
-            if (Objects.isNull(consultation.getClient())) {
-                st.setNull(2, Types.BIGINT);
-            } else {
-                st.setLong(2, consultation.getClient().getUserId());
-            }
-            st.setTimestamp(3, Timestamp.valueOf(consultation.getVisitTime()));
-            st.registerOutParameter(4, Types.INTEGER);
-            st.executeUpdate();
-            int result_code = st.getInt(4);
-            if (ConsultationUniqueConstraint.LAWYER_BUSY.getValue() == result_code) {
-                throw new UniqueConstraintViolationException("Lawyer already has consultation at this time");
-            } else if (ConsultationUniqueConstraint.USER_BUSY.getValue() == result_code) {
-                throw new UniqueConstraintViolationException("User already has consultation at this time");
-            }
-        }
-    }
-
     private String prepareQuery(ConsultationCriteria criteria) {
-        String query = Strings.EMPTY;
-        if (Objects.nonNull(criteria.getUnoccupiedOnly()) && criteria.getUnoccupiedOnly().equals(Boolean.TRUE)) {
-            query = " where consultations.user_id is null";
+        StringJoiner queryJoiner = new StringJoiner(" and ", " where ", "");
+        if (criteria.isUnoccupiedOnly()) {
+            queryJoiner.add("consultations.user_id is null");
         }
-        return String.format(SELECT_QUERY, query);
+        if (Objects.nonNull(criteria.getLawyerId())) {
+            queryJoiner.add("consultations.lawyer_id=" + criteria.getLawyerId());
+        }
+        if (Objects.nonNull(criteria.getClientId())) {
+            queryJoiner.add("consultations.user_id=" + criteria.getClientId());
+        }
+        if (Objects.nonNull(criteria.getVisitTime())) {
+            queryJoiner.add("consultations.visit_time='" + criteria.getVisitTime() + "'");
+        }
+        return String.format(SELECT_QUERY, queryJoiner);
     }
 
 }

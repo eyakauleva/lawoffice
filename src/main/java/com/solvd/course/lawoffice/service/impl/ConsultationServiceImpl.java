@@ -4,6 +4,7 @@ import com.solvd.course.lawoffice.domain.consultation.Consultation;
 import com.solvd.course.lawoffice.domain.consultation.ValidationException;
 import com.solvd.course.lawoffice.domain.criteria.ConsultationCriteria;
 import com.solvd.course.lawoffice.domain.exception.ResourceDoesNotExistException;
+import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
 import com.solvd.course.lawoffice.persistence.ConsultationRepository;
 import com.solvd.course.lawoffice.service.ConsultationService;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +23,12 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Transactional
     public Consultation create(Consultation consultation) {
         validate(consultation);
-        consultationRepository.checkConsultationOnUniqueConstraints(consultation);
         consultationRepository.create(consultation);
         return consultation;
     }
 
     @Transactional
     public Consultation update(Consultation consultation) {
-        validate(consultation);
         Consultation initialConsultation = consultationRepository.findById(consultation.getId())
                 .orElseThrow(() -> new ResourceDoesNotExistException("Consultation (id=" + consultation.getId() + ") does not exist"));
         boolean doesContainNewData = false;
@@ -46,7 +45,7 @@ public class ConsultationServiceImpl implements ConsultationService {
             doesContainNewData = true;
         }
         if (doesContainNewData) {
-            consultationRepository.checkConsultationOnUniqueConstraints(initialConsultation);
+            validate(initialConsultation);
             consultationRepository.update(initialConsultation);
         }
         return initialConsultation;
@@ -59,6 +58,17 @@ public class ConsultationServiceImpl implements ConsultationService {
     private void validate(Consultation consultation) {
         if (Objects.nonNull(consultation.getClient()) && Objects.isNull(consultation.getClient().getUserId())) {
             throw new ValidationException("Validation error", "consultation.client.userId", "Client's id cannot be null");
+        }
+        ConsultationCriteria criteria = new ConsultationCriteria();
+        criteria.setVisitTime(consultation.getVisitTime());
+        criteria.setLawyerId(consultation.getLawyer().getLawyerId());
+        if (findAllByCriteria(criteria).size() > 0) {
+            throw new UniqueConstraintViolationException("Lawyer already has consultation at this time");
+        }
+        criteria.setLawyerId(null);
+        criteria.setClientId(consultation.getClient().getUserId());
+        if (findAllByCriteria(criteria).size() > 0) {
+            throw new UniqueConstraintViolationException("Client already has consultation at this time");
         }
     }
 
