@@ -7,16 +7,14 @@ import com.solvd.course.lawoffice.persistence.jdbc.mapper.ConsultationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "repository", name = "impl", havingValue = "jdbc")
 public class ConsultationRepositoryImpl implements ConsultationRepository {
 
     private final DataSource dataSource;

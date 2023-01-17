@@ -8,7 +8,6 @@ import com.solvd.course.lawoffice.persistence.jdbc.mapper.LawyerMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -21,9 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "repository", name = "impl", havingValue = "jdbc")
 public class LawyerRepositoryImpl implements LawyerRepository {
 
     private final DataSource dataSource;
