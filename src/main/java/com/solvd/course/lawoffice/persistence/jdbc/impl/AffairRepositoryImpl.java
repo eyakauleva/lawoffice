@@ -5,6 +5,7 @@ import com.solvd.course.lawoffice.persistence.AffairRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "repository", name = "impl", havingValue = "jdbc")
 public class AffairRepositoryImpl implements AffairRepository {
 
     private final DataSource dataSource;

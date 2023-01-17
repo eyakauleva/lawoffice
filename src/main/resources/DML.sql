@@ -72,6 +72,14 @@ insert into users(role, name, surname, email, phone, status)
 insert into users(role, name, surname, email, phone, status)
 	values('CLIENT', 'ivan5', 'ivanov', 'ivanov@gmail.com', '+12345', 'ACTIVE');
 	
+
+insert into lawyers(user_id, description, experience)
+	values(1, 'best lawyer ever', 10.3);
+insert into lawyers(user_id, description, experience)
+	values(2, 'best lawyer ever', 10.3);
+insert into lawyers(user_id, description, experience)
+	values(3, 'best lawyer ever', 10.3);
+	
 	
 insert into services(service_id, name, description)
 	values(null, 'main1', 'this is main service #1');
@@ -87,29 +95,6 @@ insert into services(service_id, name, description)
 	values(5, 'sub4', 'gdfdfsd');
 insert into services(service_id, name, description)
 	values(5, 'sub5', 'lalalalalal');
-	
-	
-
-
-DO $$
-DECLARE
-   serviceId bigint; 
-BEGIN
-   insert into services(service_id, name, description)
-		values(null, 'checkchekc5', 'this is main service #1') 
-			returning id into serviceId;
-   insert into services(service_id, name, description)
-		values(serviceId, 'checkchekc6', 'this is main service #1');
-END; $$
-
-	
-	
-insert into lawyers(user_id, description, experience)
-	values(1, 'best lawyer ever', 10.3);
-insert into lawyers(user_id, description, experience)
-	values(2, 'best lawyer ever', 10.3);
-insert into lawyers(user_id, description, experience)
-	values(3, 'best lawyer ever', 10.3);
 	
 
 insert into lawyers_has_services(lawyer_id, service_id) values(1, 4);
@@ -127,14 +112,30 @@ insert into reviews(user_id, description, grade, review_time)
 	values(5, 'expected more...', 6, CURRENT_TIMESTAMP);
 insert into reviews(user_id, description, grade) 
 	values(5, 'new review', 7);
-insert into reviews(user_id, description, grade, review_time) 
-	values(5, 'expected more...', 6, null);
-	
-	
+
+
 insert into consultations(lawyer_id, user_id, visit_time) 
 	values(1, null, '2023-01-20 14:40');
 insert into consultations(lawyer_id, user_id, visit_time) 
 	values(2, 5, '2023-01-20 16:00');
+	
+	
+insert into affairs(user_id, name, status, description, start_date, end_date, price)
+	values(4, 'affair #1', 'SUCCESS', 'lalallala', '2023-01-01', CURRENT_DATE, 124.56);
+
+
+
+DO $$
+DECLARE
+   serviceId bigint; 
+BEGIN
+   insert into services(service_id, name, description)
+		values(null, 'checkchekc5', 'this is main service #1') 
+			returning id into serviceId;
+   insert into services(service_id, name, description)
+		values(serviceId, 'checkchekc6', 'this is main service #1');
+END; $$
+
 
 -- continue-on-error: true
 	
@@ -152,3 +153,5 @@ select * from consultations;
 
 
 select * from affairs;
+
+select count(1) as affairs_count from affairs

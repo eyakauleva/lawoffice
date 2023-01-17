@@ -6,6 +6,7 @@ import com.solvd.course.lawoffice.persistence.jdbc.mapper.FacilityMapper;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
+//@ConditionalOnProperty(prefix = "repository", name = "impl", havingValue = "jdbc")
 public class FacilityRepositoryImpl implements FacilityRepository {
 
     private final DataSource dataSource;

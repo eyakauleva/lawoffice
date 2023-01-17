@@ -65,10 +65,12 @@ public class ConsultationServiceImpl implements ConsultationService {
         if (findAllByCriteria(criteria).size() > 0) {
             throw new UniqueConstraintViolationException("Lawyer already has consultation at this time");
         }
-        criteria.setLawyerId(null);
-        criteria.setClientId(consultation.getClient().getUserId());
-        if (findAllByCriteria(criteria).size() > 0) {
-            throw new UniqueConstraintViolationException("Client already has consultation at this time");
+        if (Objects.nonNull(consultation.getClient())) {
+            criteria.setLawyerId(null);
+            criteria.setClientId(consultation.getClient().getUserId());
+            if (findAllByCriteria(criteria).size() > 0) {
+                throw new UniqueConstraintViolationException("Client already has consultation at this time");
+            }
         }
     }
 

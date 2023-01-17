@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.course.lawoffice.persistence.mybatis.ConsultationMapper">
+    <resultMap id="consultation" type="com.solvd.course.lawoffice.domain.consultation.Consultation">
+        <id property="id" column="consultation_id"/>
+        <result property="lawyer.lawyerId" column="consultation_lawyer_id"/>
+        <result property="lawyer.userId" column="lawyer_user_id"/>
+        <result property="lawyer.name" column="lawyer_user_name"/>
+        <result property="lawyer.surname" column="lawyer_user_surname"/>
+        <result property="visitTime" column="consultation_visit_time"/>
+        <result property="client.userId" column="consultation_client_id"/>
+    </resultMap>
+    <insert id="create" parameterType = "com.solvd.course.lawoffice.domain.consultation.Consultation"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+        insert into consultations(lawyer_id, user_id, visit_time) values(
+        #{lawyer.lawyerId},
+        <choose>
+            <when test="client != null">
+                #{client.userId}
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>
+        , #{visitTime})
+    </insert>
+    <update id="update" parameterType="com.solvd.course.lawoffice.domain.consultation.Consultation" statementType="PREPARED">
+        update consultations set lawyer_id=#{lawyer.lawyerId}, user_id=
+        <choose>
+            <when test="client != null">
+                #{client.userId}
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>
+        , visit_time=#{visitTime} where id=#{id}
+    </update>
+    <select id="findById" resultMap="consultation" parameterType="java.lang.Long" >
+        select consultations.id consultation_id, consultations.lawyer_id consultation_lawyer_id,
+        consultations.visit_time consultation_visit_time, consultations.user_id consultation_client_id,
+        lawyers.user_id lawyer_user_id, users.name lawyer_user_name, users.surname lawyer_user_surname
+        from consultations
+        inner join lawyers on lawyers.id = consultations.lawyer_id
+        inner join users on users.id = lawyers.user_id
+        where consultations.id = #{consultationId}
+    </select>
+    <select id="findAllByCriteria" resultMap="consultation" parameterType="com.solvd.course.lawoffice.domain.criteria.ConsultationCriteria" >
+        select consultations.id consultation_id, consultations.lawyer_id consultation_lawyer_id,
+        consultations.visit_time consultation_visit_time, consultations.user_id consultation_client_id,
+        lawyers.user_id lawyer_user_id, users.name lawyer_user_name, users.surname lawyer_user_surname
+        from consultations
+        inner join lawyers on lawyers.id = consultations.lawyer_id
+        inner join users on users.id = lawyers.user_id where consultations.id != 0
+        <if test="unoccupiedOnly==true">
+            and consultations.user_id is null
+        </if>
+        <if test="lawyerId != null">
+            and consultations.lawyer_id=2
+        </if>
+        <if test="clientId != null">
+            and consultations.user_id=#{clientId}
+        </if>
+        <if test="visitTime != null">
+            and consultations.visit_time=#{visitTime}
+        </if>
+    </select>
+</mapper>

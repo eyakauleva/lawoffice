@@ -8,3 +8,9 @@ spring:
       mode: always
   jackson:
     default-property-inclusion: non_null
+
+mybatis:
+  mapper-locations: "classpath:mapper/**/*-mapper.xml"
+
+repository:
+  impl: mybatis

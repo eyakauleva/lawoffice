@@ -6,6 +6,8 @@ import com.solvd.course.lawoffice.persistence.ConsultationRepository;
 import com.solvd.course.lawoffice.persistence.jdbc.mapper.ConsultationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -14,6 +16,7 @@ import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "repository", name = "impl", havingValue = "jdbc")
 public class ConsultationRepositoryImpl implements ConsultationRepository {
 
     private final DataSource dataSource;
@@ -100,20 +103,33 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
     }
 
     private String prepareQuery(ConsultationCriteria criteria) {
-        StringJoiner queryJoiner = new StringJoiner(" and ", " where ", "");
+        StringJoiner queryJoiner = new StringJoiner(" and ", Strings.EMPTY, Strings.EMPTY);
+        boolean isWhereClauseAdded = false;
         if (criteria.isUnoccupiedOnly()) {
+            isWhereClauseAdded = checkQuery(isWhereClauseAdded, queryJoiner);
             queryJoiner.add("consultations.user_id is null");
         }
         if (Objects.nonNull(criteria.getLawyerId())) {
+            isWhereClauseAdded = checkQuery(isWhereClauseAdded, queryJoiner);
             queryJoiner.add("consultations.lawyer_id=" + criteria.getLawyerId());
         }
         if (Objects.nonNull(criteria.getClientId())) {
+            isWhereClauseAdded = checkQuery(isWhereClauseAdded, queryJoiner);
             queryJoiner.add("consultations.user_id=" + criteria.getClientId());
         }
         if (Objects.nonNull(criteria.getVisitTime())) {
+            isWhereClauseAdded = checkQuery(isWhereClauseAdded, queryJoiner);
             queryJoiner.add("consultations.visit_time='" + criteria.getVisitTime() + "'");
         }
         return String.format(SELECT_QUERY, queryJoiner);
+    }
+
+    private boolean checkQuery(boolean isWhereClauseAdded, StringJoiner queryJoiner){
+        if(!isWhereClauseAdded){
+            queryJoiner.add(" where ");
+            isWhereClauseAdded=true;
+        }
+        return isWhereClauseAdded;
     }
 
 }
