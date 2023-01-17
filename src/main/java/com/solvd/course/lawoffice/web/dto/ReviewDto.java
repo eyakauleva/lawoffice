@@ -25,7 +25,6 @@ public class ReviewDto {
     @Digits(integer = 2, fraction = 0)
     private Integer grade;
 
-    @NotNull(groups = CreateGroup.class, message = "Review's creation time cannot be null")
     private LocalDateTime reviewTime;
 
     @NotNull(groups = CreateGroup.class, message = "Review must contain a client")

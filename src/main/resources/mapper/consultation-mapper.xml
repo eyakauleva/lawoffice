@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.solvd.course.lawoffice.persistence.mybatis.ConsultationMapper">
+<mapper namespace="com.solvd.course.lawoffice.persistence.mybatis.ConsultationRepositoryImpl">
     <resultMap id="consultation" type="com.solvd.course.lawoffice.domain.consultation.Consultation">
         <id property="id" column="consultation_id"/>
         <result property="lawyer.lawyerId" column="consultation_lawyer_id"/>

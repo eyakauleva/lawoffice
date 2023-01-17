@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-//@ConditionalOnProperty(prefix = "repository", name = "impl", havingValue = "jdbc")
+@ConditionalOnProperty(prefix = "repository", name = "impl", havingValue = "jdbc")
 public class LawyerRepositoryImpl implements LawyerRepository {
 
     private final DataSource dataSource;

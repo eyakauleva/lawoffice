@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.course.lawoffice.persistence.mybatis.FacilityRepositoryImpl">
+    <resultMap id="facility" type="com.solvd.course.lawoffice.domain.Facility">
+        <id property="id" column="service_id"/>
+        <result property="facility.id" column="service_parent_id"/>
+        <result property="name" column="service_name"/>
+        <result property="description" column="service_description"/>
+    </resultMap>
+    <select id="findById" resultMap="facility" parameterType="java.lang.Long" >
+        select services.id service_id, services.service_id service_parent_id,
+        services.name service_name, services.description service_description
+        from services
+        where services.id = #{serviceId}
+    </select>
+    <select id="findAll" resultMap="facility">
+        select services.id service_id, services.service_id service_parent_id,
+        services.name service_name, services.description service_description
+        from services
+    </select>
+</mapper>

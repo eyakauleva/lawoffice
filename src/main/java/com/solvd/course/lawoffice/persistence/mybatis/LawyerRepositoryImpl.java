@@ -1,9 +1,9 @@
 package com.solvd.course.lawoffice.persistence.mybatis;
 
-import com.solvd.course.lawoffice.persistence.ConsultationRepository;
+import com.solvd.course.lawoffice.persistence.LawyerRepository;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 //@ConditionalOnProperty(prefix = "repository", name = "impl", havingValue = "mybatis")
-public interface ConsultationMapper extends ConsultationRepository {
+public interface LawyerRepositoryImpl extends LawyerRepository {
 }
