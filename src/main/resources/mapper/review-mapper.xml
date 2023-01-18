@@ -1,38 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version = "1.0" encoding = "UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.solvd.course.lawoffice.persistence.mybatis.ReviewRepositoryImpl">
-    <resultMap id="review" type="com.solvd.course.lawoffice.domain.Review">
-        <id property="id" column="review_id"/>
-        <result property="description" column="review_description"/>
-        <result property="grade" column="review_grade"/>
-        <result property="reviewTime" column="review_time"/>
-        <result property="client.userId" column="user_id"/>
-        <result property="client.name" column="user_name"/>
-        <result property="client.surname" column="user_surname"/>
+<mapper namespace = "com.solvd.course.lawoffice.persistence.ReviewRepository">
+
+    <resultMap id = "review" type = "com.solvd.course.lawoffice.domain.Review" autoMapping = "false">
+        <id property = "id" column = "review_id"/>
+        <result property = "description" column = "review_description"/>
+        <result property = "grade" column = "review_grade"/>
+        <result property = "reviewTime" column = "review_time"/>
+        <result property = "client.userId" column = "user_id"/>
+        <result property = "client.name" column = "user_name"/>
+        <result property = "client.surname" column = "user_surname"/>
     </resultMap>
-    <insert id="create" parameterType = "com.solvd.course.lawoffice.domain.Review"
-            useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+
+    <insert id = "create" parameterType = "com.solvd.course.lawoffice.domain.Review"
+            useGeneratedKeys = "true" keyProperty = "id" keyColumn = "id" statementType = "PREPARED">
         insert into reviews(user_id, description, grade) values(#{client.userId}, #{description}, #{grade})
     </insert>
-    <update id="update" parameterType="com.solvd.course.lawoffice.domain.Review" statementType="PREPARED">
-        update reviews set user_id=#{client.userId}, description=#{description}, grade=#{grade},
-            review_time=#{reviewTime} where id=#{id}
+
+    <update id = "update" parameterType = "com.solvd.course.lawoffice.domain.Review" statementType = "PREPARED">
+        update reviews set user_id = #{client.userId}, description = #{description}, grade = #{grade},
+            review_time = #{reviewTime} where id = #{id}
     </update>
-    <delete id="delete" parameterType="java.lang.Long">
-        delete from reviews where id=#{reviewId}
+
+    <delete id = "delete" parameterType = "java.lang.Long">
+        delete from reviews where id = #{reviewId}
     </delete>
-    <select id="findById" resultMap="review" parameterType="java.lang.Long" >
+
+    <select id = "findById" resultMap = "review" parameterType = "java.lang.Long" >
         select reviews.id review_id, reviews.description review_description,
         reviews.grade review_grade, reviews.review_time review_time,
         users.id user_id, users.name user_name, users.surname user_surname
         from reviews inner join users on users.id = reviews.user_id
         where reviews.id = #{reviewId}
     </select>
-    <select id="findAll" resultMap="review">
+
+    <select id = "findAll" resultMap = "review">
         select reviews.id review_id, reviews.description review_description,
         reviews.grade review_grade, reviews.review_time review_time,
         users.id user_id, users.name user_name, users.surname user_surname
         from reviews inner join users on users.id = reviews.user_id
     </select>
+
 </mapper>

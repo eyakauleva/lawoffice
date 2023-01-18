@@ -1,26 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version = "1.0" encoding = "UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.solvd.course.lawoffice.persistence.mybatis.LawyerRepositoryImpl">
-    <resultMap id="lawyer" type="com.solvd.course.lawoffice.domain.Lawyer">
-        <id property="lawyerId" column="lawyer_id"/>
-        <result property="description" column="lawyer_description"/>
-        <result property="experience" column="lawyer_experience"/>
-        <result property="startDate" column="lawyer_start_date"/>
-        <result property="userId" column="user_id"/>
-        <result property="role" column="user_role"/>
-        <result property="name" column="user_name"/>
-        <result property="surname" column="user_surname"/>
-        <result property="email" column="user_email"/>
-        <result property="phone" column="user_phone"/>
-        <result property="status" column="user_status"/>
-        <collection property="facilities" javaType="list" ofType="com.solvd.course.lawoffice.domain.Facility"
-                    resultMap="com.solvd.course.lawoffice.persistence.mybatis.FacilityRepositoryImpl.facility">
+<mapper namespace = "com.solvd.course.lawoffice.persistence.LawyerRepository">
+
+    <resultMap id = "lawyer" type = "com.solvd.course.lawoffice.domain.Lawyer" autoMapping = "false">
+        <id property = "lawyerId" column = "id"/>
+        <result property = "description" column = "description"/>
+        <result property = "experience" column = "experience"/>
+        <result property = "startDate" column = "start_date"/>
+        <result property = "userId" column = "user_id"/>
+        <result property = "role" column = "user_role"/>
+        <result property = "name" column = "user_name"/>
+        <result property = "surname" column = "user_surname"/>
+        <result property = "email" column = "user_email"/>
+        <result property = "phone" column = "user_phone"/>
+        <result property = "status" column = "user_status"/>
+        <collection property = "facilities" javaType = "list" ofType = "com.solvd.course.lawoffice.domain.Facility" autoMapping = "false"
+                    resultMap = "com.solvd.course.lawoffice.persistence.FacilityRepository.facility">
         </collection>
     </resultMap>
-    <select id="findById" resultMap="lawyer" parameterType="java.lang.Long" >
-        select lawyers.id lawyer_id, lawyers.description lawyer_description,
-        lawyers.experience lawyer_experience, lawyers.start_date lawyer_start_date,
+
+    <select id = "findById" resultMap = "lawyer" parameterType = "java.lang.Long" >
+        select lawyers.id id, lawyers.description description,
+        lawyers.experience experience, lawyers.start_date start_date,
         users.id user_id, users.role user_role,
         users.name user_name, users.surname user_surname, users.email user_email,
         users.phone user_phone, users.status user_status,
@@ -28,13 +30,14 @@
         services.name service_name, services.description service_description
         from lawyers
         inner join users on users.id = lawyers.user_id
-        inner join lawyers_has_services on lawyers.id=lawyers_has_services.lawyer_id
+        inner join lawyers_has_services on lawyers.id = lawyers_has_services.lawyer_id
         inner join services on lawyers_has_services.service_id = services.id
         where lawyers.id = #{lawyerId}
     </select>
-    <select id="findAll" resultMap="lawyer">
-        select lawyers.id lawyer_id, lawyers.description lawyer_description,
-        lawyers.experience lawyer_experience, lawyers.start_date lawyer_start_date,
+
+    <select id = "findAll" resultMap = "lawyer">
+        select lawyers.id id, lawyers.description description,
+        lawyers.experience experience, lawyers.start_date start_date,
         users.id user_id, users.role user_role,
         users.name user_name, users.surname user_surname, users.email user_email,
         users.phone user_phone, users.status user_status,
@@ -42,7 +45,8 @@
         services.name service_name, services.description service_description
         from lawyers
         inner join users on users.id = lawyers.user_id
-        inner join lawyers_has_services on lawyers.id=lawyers_has_services.lawyer_id
+        inner join lawyers_has_services on lawyers.id = lawyers_has_services.lawyer_id
         inner join services on lawyers_has_services.service_id = services.id
     </select>
+
 </mapper>
