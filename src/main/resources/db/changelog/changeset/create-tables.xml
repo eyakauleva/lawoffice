@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create_tables" author="eyakauleva">
+
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role" type="varchar(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="varchar(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="services">
+            <column autoIncrement="true" name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="service_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="varchar(45)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="lawyers">
+            <column autoIncrement="true" name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="experience" type="real">
+                <constraints nullable="true"/>
+            </column>
+            <column name="start_date" type="date" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="consultations">
+            <column autoIncrement="true" name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="lawyer_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="visit_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="reviews">
+            <column autoIncrement="true" name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="review_time" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="affairs">
+            <column autoIncrement="true" name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="varchar(45)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="status" type="varchar(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="date">
+                <constraints nullable="true"/>
+            </column>
+            <column name="price" type="decimal(10,2)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="lawyers_has_services">
+            <column name="lawyer_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="affairs_has_lawyers">
+            <column name="affair_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lawyer_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey
+                columnNames="lawyer_id, service_id" tableName="lawyers_has_services"
+                constraintName="lawyers_has_services_pkey" />
+
+        <addPrimaryKey
+                columnNames="affair_id, lawyer_id" tableName="affairs_has_lawyers"
+                constraintName="affairs_has_lawyers_pkey" />
+
+        <addUniqueConstraint
+                columnNames="lawyer_id, visit_time"
+                constraintName="consultations_lawyer_id_visit_time_key"
+                tableName="consultations"/>
+
+        <addUniqueConstraint
+                columnNames="user_id, visit_time"
+                constraintName="consultations_user_id_visit_time_key"
+                tableName="consultations"/>
+
+        <addForeignKeyConstraint baseTableName="services" baseColumnNames="service_id"
+                                 referencedTableName="services" referencedColumnNames="id"
+                                 constraintName="services_service_id_fkey"
+                                 onDelete="CASCADE" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="lawyers" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="lawyers_user_id_fkey"
+                                 onDelete="CASCADE" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="consultations" baseColumnNames="lawyer_id"
+                                 referencedTableName="lawyers" referencedColumnNames="id"
+                                 constraintName="consultations_lawyer_id_fkey"
+                                 onDelete="CASCADE" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="consultations" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="consultations_user_id_fkey"
+                                 onDelete="SET NULL" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="reviews" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="reviews_user_id_fkey"
+                                 onDelete="SET NULL" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="affairs" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="affairs_user_id_fkey"
+                                 onDelete="SET NULL" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="lawyers_has_services" baseColumnNames="lawyer_id"
+                                 referencedTableName="lawyers" referencedColumnNames="id"
+                                 constraintName="lawyers_has_services_lawyer_id_fkey"
+                                 onDelete="CASCADE" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="lawyers_has_services" baseColumnNames="service_id"
+                                 referencedTableName="services" referencedColumnNames="id"
+                                 constraintName="lawyers_has_services_service_id_fkey"
+                                 onDelete="CASCADE" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="affairs_has_lawyers" baseColumnNames="affair_id"
+                                 referencedTableName="affairs" referencedColumnNames="id"
+                                 constraintName="affairs_has_lawyers_affair_id_fkey"
+                                 onDelete="CASCADE" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="affairs_has_lawyers" baseColumnNames="lawyer_id"
+                                 referencedTableName="lawyers" referencedColumnNames="id"
+                                 constraintName="affairs_has_lawyers_lawyer_id_fkey"
+                                 onDelete="CASCADE" onUpdate="CASCADE"/>
+
+    </changeSet>
+
+</databaseChangeLog>
