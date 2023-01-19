@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Objects;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class AffairRepositoryImpl implements AffairRepository {
 

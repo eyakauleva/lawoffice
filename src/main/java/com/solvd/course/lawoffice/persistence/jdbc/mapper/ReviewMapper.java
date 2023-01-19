@@ -11,6 +11,7 @@ public class ReviewMapper {
     @SneakyThrows
     public static Review mapRow(ResultSet rs) {
         User client = new User();
+        client.setUserId(rs.getLong("user_id"));
         client.setName(rs.getString("user_name"));
         client.setSurname(rs.getString("user_surname"));
         Review review = new Review();

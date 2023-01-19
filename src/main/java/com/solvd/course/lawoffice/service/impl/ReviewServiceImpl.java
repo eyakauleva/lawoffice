@@ -40,7 +40,7 @@ public class ReviewServiceImpl implements ReviewService {
             initialReview.setClient(review.getClient());
             doesContainNewData = true;
         }
-        if(doesContainNewData){
+        if (doesContainNewData) {
             reviewRepository.update(initialReview);
         }
         return initialReview;

@@ -57,10 +57,10 @@ public class ExceptionHandling {
         return new ExceptionBody(ex.getMessage());
     }
 
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionBody handleAllOtherExceptions() {
-        return new ExceptionBody("Internal server error");
-    }
+//    @ExceptionHandler(Throwable.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ExceptionBody handleAllOtherExceptions() {
+//        return new ExceptionBody("Internal server error");
+//    }
 
 }
