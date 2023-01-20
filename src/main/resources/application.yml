@@ -11,3 +11,8 @@ spring:
 
 mybatis:
   mapper-locations: "classpath:mapper/**/*-mapper.xml"
+
+jwt:
+  secret: solvd-lawoffice
+  expirationTimeInSec: 1200
+  ableForRefreshTimeInSec: 1000

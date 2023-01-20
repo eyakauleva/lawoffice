@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 public class User {
 
     private Long userId;
+    private String login;
+    private String password;
     private String name;
     private String surname;
     private String phone;
@@ -29,6 +31,8 @@ public class User {
 
     public User(User user) {
         this.userId = user.getUserId();
+        this.login = user.getLogin();
+        this.password = user.getPassword();
         this.name = user.getName();
         this.surname = user.getSurname();
         this.phone = user.getPhone();

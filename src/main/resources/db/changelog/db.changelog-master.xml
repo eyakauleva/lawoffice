@@ -6,5 +6,9 @@
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <include file="changeset/create-tables.xml" relativeToChangelogFile="true"/>
+    <include file="changeset/alter-table-reviews-add-column-grade.xml" relativeToChangelogFile="true"/>
+    <include file="changeset/alter-table-user-add-columns-login-password.xml" relativeToChangelogFile="true"/>
+    <include file="changeset/users-update-login-password.xml" relativeToChangelogFile="true"/>
+    <include file="changeset/alter-table-users-login-unique-not-null-password-not-null.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
