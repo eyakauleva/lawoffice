@@ -7,6 +7,7 @@ import com.solvd.course.lawoffice.web.mapper.ReviewMapper;
 import com.solvd.course.lawoffice.web.validation.ClientIdRequiredGroup;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,8 @@ public class ReviewController {
     }
 
     @PatchMapping(value = "/{id}")
+//    @PreAuthorize("isMember(#id)")
+    @PostAuthorize("isReviewOwner()")
     public ReviewDto update(@RequestBody @Validated(ClientIdRequiredGroup.class) ReviewDto reviewDto,
                             @PathVariable("id") Long id) {
         reviewDto.setId(id);
@@ -36,7 +39,9 @@ public class ReviewController {
         return reviewMapper.domainToDto(review);
     }
 
+
     @DeleteMapping(value = "/{id}")
+    @PostAuthorize("isReviewOwner() || hasRole('ROLE_ADMIN')")
     public void delete(@PathVariable("id") Long id) {
         reviewService.delete(id);
     }

@@ -113,8 +113,8 @@ public class JwtProvider {
                 .get(ATTRIBUTE_ID, Long.class);
     }
 
-    public Boolean isRefreshAvailable(ExpiredJwtException e) {
-        long creationTimeInMs = e.getClaims().getIssuedAt().getTime();
+    public Boolean isRefreshAvailable(ExpiredJwtException ex) {
+        long creationTimeInMs = ex.getClaims().getIssuedAt().getTime();
         long timePastSinceCreationInMs = System.currentTimeMillis() - creationTimeInMs;
         return timePastSinceCreationInMs > ableForRefreshTimeInMs;
     }

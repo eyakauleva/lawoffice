@@ -7,9 +7,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,22 +20,23 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component
+@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
     private final static String URL_REFRESH = "refresh";
     private final static String ATTRIBUTE_AUTHORIZATION = "Authorization";
     private final static String ATTRIBUTE_TOKEN_BEGINNING_IN_HEADER = "Bearer ";
     public final static String ATTRIBUTE_CLAIMS = "claims";
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         return request.getRequestURI().equals("/api/v1/auth");
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         String token = getTokenFromRequest(request);
         String requestURL = request.getRequestURL().toString();
@@ -61,12 +62,12 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
                 filterChain.doFilter(request, response);
-                return;
             }
         } catch (ExpiredJwtException e) {
             if (requestURL.contains(URL_REFRESH)) {
                 if (jwtProvider.isRefreshAvailable(e)) {
                     allowForRefreshToken(e, request);
+                    filterChain.doFilter(request, response);
                 } else {
                     throw new JwtException("Token is not available for refresh yet");
                 }
