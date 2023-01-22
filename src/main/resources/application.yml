@@ -13,6 +13,6 @@ mybatis:
   mapper-locations: "classpath:mapper/**/*-mapper.xml"
 
 jwt:
-  secret: solvd-lawoffice
-  expirationTimeInSec: 1200
+  secret: solvd-lawoffice-security
+  expirationTimeInSec: 1800
   ableForRefreshTimeInSec: 1000
