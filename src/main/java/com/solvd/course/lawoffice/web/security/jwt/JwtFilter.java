@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +18,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -31,50 +31,46 @@ public class JwtFilter extends OncePerRequestFilter {
     public final static String ATTRIBUTE_CLAIMS = "claims";
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().equals("/api/v1/auth");
-    }
-
-    @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        String token = getTokenFromRequest(request);
-        String requestURL = request.getRequestURL().toString();
-        try {
-            if (StringUtils.hasText(token) && jwtProvider.validateToken(token)) {
+        Optional<String> tokenOptional = getTokenFromRequest(request);
+        if (tokenOptional.isPresent()) {
+            String token = tokenOptional.get();
+            String requestURL = request.getRequestURL().toString();
+            try {
+                if (StringUtils.hasText(token) && jwtProvider.validateToken(token)) {
 
-                if (requestURL.contains(URL_REFRESH)) {
-                    throw new JwtException("Token is not expired yet");
+                    if (requestURL.contains(URL_REFRESH)) {
+                        throw new JwtException("Token is not expired yet");
+                    }
+
+                    UserDetails userDetails =
+                            new UserDetailsImpl(
+                                    jwtProvider.getIdFromToken(token),
+                                    jwtProvider.getLoginFromToken(token),
+                                    Strings.EMPTY,
+                                    jwtProvider.getRolesFromToken(token),
+                                    jwtProvider.getStatusFromToken(token));
+
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
                 }
-
-                UserDetails userDetails =
-                        new UserDetailsImpl(
-                                jwtProvider.getIdFromToken(token),
-                                jwtProvider.getLoginFromToken(token),
-                                Strings.EMPTY,
-                                jwtProvider.getRolesFromToken(token),
-                                jwtProvider.getStatusFromToken(token));
-
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
-
-                SecurityContextHolder.getContext().setAuthentication(auth);
-
-                filterChain.doFilter(request, response);
-            }
-        } catch (ExpiredJwtException e) {
-            if (requestURL.contains(URL_REFRESH)) {
-                if (jwtProvider.isRefreshAvailable(e)) {
-                    allowForRefreshToken(e, request);
-                    filterChain.doFilter(request, response);
-                } else {
-                    throw new JwtException("Token is not available for refresh yet");
+            } catch (ExpiredJwtException e) {
+                if (requestURL.contains(URL_REFRESH)) {
+                    if (jwtProvider.isRefreshAvailable(e)) {
+                        allowForRefreshToken(e, request);
+                        filterChain.doFilter(request, response);
+                    } else {
+                        throw new JwtException("Token is not available for refresh yet");
+                    }
                 }
             }
         }
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        filterChain.doFilter(request, response);
     }
 
     private void allowForRefreshToken(ExpiredJwtException ex, HttpServletRequest request) {
@@ -84,13 +80,14 @@ public class JwtFilter extends OncePerRequestFilter {
         request.setAttribute(ATTRIBUTE_CLAIMS, ex.getClaims());
     }
 
-    private String getTokenFromRequest(HttpServletRequest request) {
+    private Optional<String> getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(ATTRIBUTE_AUTHORIZATION);
         if (StringUtils.hasText(bearerToken)
                 && bearerToken.startsWith(ATTRIBUTE_TOKEN_BEGINNING_IN_HEADER)) {
-            return bearerToken.replace(ATTRIBUTE_TOKEN_BEGINNING_IN_HEADER, Strings.EMPTY);
+            return Optional.of(bearerToken.replace(ATTRIBUTE_TOKEN_BEGINNING_IN_HEADER, Strings.EMPTY));
+        } else {
+            return Optional.empty();
         }
-        return Strings.EMPTY;
     }
 
 }

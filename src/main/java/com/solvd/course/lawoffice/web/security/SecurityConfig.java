@@ -45,7 +45,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(
                 auth -> auth
-                        .requestMatchers("/api/v1/auth")
+                        .requestMatchers("/api/v1/auth", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/consultations")
                         .hasAnyRole(Role.LAWYER, Role.ADMIN)

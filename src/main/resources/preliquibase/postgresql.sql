@@ -1,1 +1,1 @@
-CREATE SCHEMA IF NOT EXISTS ${spring.liquibase.default-schema};
+create schema if not exists ${spring.liquibase.default-schema};

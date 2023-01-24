@@ -6,7 +6,7 @@ spring:
   jackson:
     default-property-inclusion: non_null
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.xml
+    change-log: classpath:db/changelog/db.changelog-master.yaml
     default-schema: law_office_schema
 
 mybatis:

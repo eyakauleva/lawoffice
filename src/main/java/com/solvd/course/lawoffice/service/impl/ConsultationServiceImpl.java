@@ -51,7 +51,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         return initialConsultation;
     }
 
-    public List<Consultation> findAllByCriteria(ConsultationCriteria criteria) {
+    public List<Consultation> findByCriteria(ConsultationCriteria criteria) {
         return consultationRepository.findAllByCriteria(criteria);
     }
 
@@ -62,13 +62,13 @@ public class ConsultationServiceImpl implements ConsultationService {
         ConsultationCriteria criteria = new ConsultationCriteria();
         criteria.setVisitTime(consultation.getVisitTime());
         criteria.setLawyerId(consultation.getLawyer().getLawyerId());
-        if (findAllByCriteria(criteria).size() > 0) {
+        if (findByCriteria(criteria).size() > 0) {
             throw new UniqueConstraintViolationException("Lawyer already has consultation at this time");
         }
         if (Objects.nonNull(consultation.getClient())) {
             criteria.setLawyerId(null);
             criteria.setClientId(consultation.getClient().getUserId());
-            if (findAllByCriteria(criteria).size() > 0) {
+            if (findByCriteria(criteria).size() > 0) {
                 throw new UniqueConstraintViolationException("Client already has consultation at this time");
             }
         }
