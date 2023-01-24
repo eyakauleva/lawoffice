@@ -5,6 +5,9 @@ import com.solvd.course.lawoffice.domain.security.AuthResponse;
 import com.solvd.course.lawoffice.web.security.jwt.JwtFilter;
 import com.solvd.course.lawoffice.web.security.jwt.JwtProvider;
 import io.jsonwebtoken.impl.DefaultClaims;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +25,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping(value = "/api/v1")
 @RequiredArgsConstructor
+@Tag(name = "Authorization", description = "Methods to authorize")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -29,14 +33,17 @@ public class AuthController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/auth")
-    public AuthResponse auth(@RequestBody AuthRequest authRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword()));
+    @Operation(summary = "Get access token")
+    public AuthResponse auth(@RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Authorization data") AuthRequest authRequest) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword()));
         String token = jwtProvider.generateToken(userDetailsService.loadUserByUsername(authRequest.getLogin()));
         return new AuthResponse(token);
     }
 
     @PostMapping("/refresh")
-    public AuthResponse refreshToken(HttpServletRequest request) {
+    @Operation(summary = "Refresh access token")
+    public AuthResponse refreshToken(@Parameter(hidden = true) HttpServletRequest request) {
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute(JwtFilter.ATTRIBUTE_CLAIMS);
         String token = null;
         if (Objects.nonNull(claims)) {
