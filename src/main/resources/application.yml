@@ -3,11 +3,16 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=law_office_schema
     username: postgres
     password: system
-  sql:
-    init:
-      mode: always
   jackson:
     default-property-inclusion: non_null
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: law_office_schema
 
 mybatis:
   mapper-locations: "classpath:mapper/**/*-mapper.xml"
+
+jwt:
+  secret: solvd-lawoffice-security
+  expirationTimeInSec: 1800
+  ableForRefreshTimeInSec: 1000

@@ -3,6 +3,7 @@ package com.solvd.course.lawoffice.web.dto;
 import com.solvd.course.lawoffice.domain.user.Role;
 import com.solvd.course.lawoffice.domain.user.UserStatus;
 import com.solvd.course.lawoffice.web.validation.ClientIdRequiredGroup;
+import com.solvd.course.lawoffice.web.validation.LawyerUserIdRequiredGroup;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class UserDto {
 
     @NotNull(groups = ClientIdRequiredGroup.class, message = "Client's id cannot be null")
+    @NotNull(groups = LawyerUserIdRequiredGroup.class, message = "Lawyer's user id cannot be null")
     private Long userId;
     private String name;
     private String surname;

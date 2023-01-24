@@ -2,8 +2,8 @@ package com.solvd.course.lawoffice.domain.user;
 
 public enum Role {
 
-    ADMIN,
-    CLIENT,
-    LAWYER
+    ROLE_ADMIN,
+    ROLE_CLIENT,
+    ROLE_LAWYER
 
 }

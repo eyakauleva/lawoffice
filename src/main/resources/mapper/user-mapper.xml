@@ -1,0 +1,25 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.solvd.course.lawoffice.persistence.UserRepository">
+
+    <resultMap id = "user" type = "com.solvd.course.lawoffice.domain.user.User" autoMapping = "false">
+        <id property = "userId" column = "user_id"/>
+        <result property = "role" column = "user_role"/>
+        <result property = "login" column = "user_login"/>
+        <result property = "password" column = "user_password"/>
+        <result property = "name" column = "user_name"/>
+        <result property = "surname" column = "user_surname"/>
+        <result property = "email" column = "user_email"/>
+        <result property = "phone" column = "user_phone"/>
+        <result property = "status" column = "user_status"/>
+    </resultMap>
+
+    <select id = "findByLogin" resultMap = "user" parameterType = "java.lang.String" >
+        select id user_id, role user_role, name user_name, surname user_surname,
+        email user_email, phone user_phone, status user_status, login user_login, password user_password
+        from users
+        where login = #{userLogin}
+    </select>
+
+</mapper>

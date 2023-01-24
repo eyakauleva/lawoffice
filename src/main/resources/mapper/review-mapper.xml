@@ -8,9 +8,9 @@
         <result property = "description" column = "review_description"/>
         <result property = "grade" column = "review_grade"/>
         <result property = "reviewTime" column = "review_time"/>
-        <result property = "client.userId" column = "user_id"/>
-        <result property = "client.name" column = "user_name"/>
-        <result property = "client.surname" column = "user_surname"/>
+        <association property = "client" javaType="com.solvd.course.lawoffice.domain.user.User" autoMapping = "false"
+                     resultMap = "com.solvd.course.lawoffice.persistence.UserRepository.user">
+        </association>
     </resultMap>
 
     <insert id = "create" parameterType = "com.solvd.course.lawoffice.domain.Review"

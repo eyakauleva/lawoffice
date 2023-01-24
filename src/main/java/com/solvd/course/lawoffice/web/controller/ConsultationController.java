@@ -9,7 +9,10 @@ import com.solvd.course.lawoffice.web.mapper.ConsultationMapper;
 import com.solvd.course.lawoffice.web.mapper.criteria.ConsultationCriteriaMapper;
 import com.solvd.course.lawoffice.web.validation.CreateGroup;
 import com.solvd.course.lawoffice.web.validation.LawyerIdRequiredGroup;
+import com.solvd.course.lawoffice.web.validation.LawyerUserIdRequiredGroup;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,13 +29,16 @@ public class ConsultationController {
     private final ConsultationCriteriaMapper consultationCriteriaMapper;
 
     @PostMapping
-    public ConsultationDto create(@RequestBody @Validated({CreateGroup.class, LawyerIdRequiredGroup.class}) ConsultationDto consultationDto) {
+    @PreAuthorize("isConsultationCreator(#consultationDto)")
+    public ConsultationDto create(@RequestBody @Validated({CreateGroup.class, LawyerIdRequiredGroup.class, LawyerUserIdRequiredGroup.class})
+                                  ConsultationDto consultationDto) {
         Consultation consultation = consultationMapper.dtoToDomain(consultationDto);
         consultation = consultationService.create(consultation);
         return consultationMapper.domainToDto(consultation);
     }
 
     @PatchMapping(value = "/{id}")
+    @PostAuthorize("isConsultationRelated()")
     public ConsultationDto update(@RequestBody @Validated({LawyerIdRequiredGroup.class}) ConsultationDto consultationDto,
                                   @PathVariable("id") Long id) {
         consultationDto.setId(id);
