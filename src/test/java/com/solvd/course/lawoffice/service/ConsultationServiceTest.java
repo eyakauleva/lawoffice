@@ -60,7 +60,7 @@ class ConsultationServiceTest {
     }
 
     @Test
-    void verifyConsultationCreationHasUniqueConstraintViolationExceptionTest() {
+    void verifyLawyerAlreadyHasConsultationAtTheProvidedTimeTest() {
         //given
         Consultation consultationToCreate = new Consultation();
         consultationToCreate.setVisitTime(LocalDateTime.parse("2023-01-25 19:00", dateTimeFormatter));
@@ -87,8 +87,10 @@ class ConsultationServiceTest {
         consultationNewFields.setId(consultationId);
         LocalDateTime newVisitTime = LocalDateTime.parse("2023-01-24 15:30", dateTimeFormatter);
         consultationNewFields.setVisitTime(newVisitTime);
-        consultationNewFields.setLawyer(new Lawyer(5L));
-        consultationNewFields.setClient(new User(6L));
+        Lawyer newLawyer = new Lawyer(5L);
+        consultationNewFields.setLawyer(newLawyer);
+        User newClient = new User(6L);
+        consultationNewFields.setClient(newClient);
 
         Consultation consultationToUpdate = new Consultation();
         consultationToUpdate.setId(consultationId);
@@ -102,11 +104,13 @@ class ConsultationServiceTest {
 
         //then
         assertNotNull(updatedConsultation);
-        assertEquals(updatedConsultation.getVisitTime(), newVisitTime);
+        assertEquals(newVisitTime, updatedConsultation.getVisitTime());
+        assertEquals(newLawyer, updatedConsultation.getLawyer());
+        assertEquals(newClient, updatedConsultation.getClient());
     }
 
     @Test
-    void verifyResourceDoesNotExistExceptionIsThrownTest() {
+    void verifyConsultationDoesNotExistTest() {
         //given
         Long consultationId = 1L;
         Consultation consultationNewFields = new Consultation();
@@ -121,7 +125,7 @@ class ConsultationServiceTest {
     }
 
     @Test
-    void verifyConsultationUpdateHasUniqueConstraintViolationExceptionTest() {
+    void verifyClientAlreadyHasConsultationAtTheProvidedTimeTest() {
         //given
         Long consultationId = 1L;
 
@@ -151,7 +155,7 @@ class ConsultationServiceTest {
     }
 
     @Test
-    void verifyConsultationIsFoundByCriteriaTest() {
+    void verifyConsultationsAreFoundByCriteriaTest() {
         //given
         Consultation consultationToFind = new Consultation();
         consultationToFind.setId(1L);
