@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceTest {
@@ -102,6 +103,25 @@ class ReviewServiceTest {
         assertThrows(ResourceDoesNotExistException.class, () -> {
             reviewService.update(reviewToUpdate);
         });
+    }
+
+    @Test
+    void verifyReviewIsDeletedTest() {
+        //given
+        Long reviewId = 1L;
+        Long[] receivedId = new Long[1];
+
+        Mockito.doAnswer(invocationOnMock -> {
+            receivedId[0] = invocationOnMock.getArgument(0);
+            return null;
+        }).when(reviewRepository).delete(anyLong());
+
+        //when
+        reviewService.delete(reviewId);
+
+        //then
+        assertNotNull(receivedId[0]);
+        assertEquals(reviewId, receivedId[0]);
     }
 
     @Test
