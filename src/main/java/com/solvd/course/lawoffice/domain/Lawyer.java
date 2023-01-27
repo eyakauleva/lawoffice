@@ -22,6 +22,10 @@ public class Lawyer extends User {
         super(user);
     }
 
+    public Lawyer(Long lawyerId) {
+        this.lawyerId = lawyerId;
+    }
+
     public Lawyer(Long lawyerId, User user) {
         super(user);
         this.lawyerId = lawyerId;

@@ -18,4 +18,12 @@ public class Review {
     private LocalDateTime reviewTime;
     private User client;
 
+    public Review(Review review) {
+        this.id = review.getId();
+        this.description = review.getDescription();
+        this.grade = review.getGrade();
+        this.reviewTime = review.getReviewTime();
+        this.client = review.getClient();
+    }
+
 }

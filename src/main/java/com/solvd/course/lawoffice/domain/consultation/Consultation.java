@@ -18,4 +18,11 @@ public class Consultation {
     private Lawyer lawyer;
     private User client;
 
+    public Consultation(Consultation consultation) {
+        this.id = consultation.id;
+        this.visitTime = consultation.getVisitTime();
+        this.lawyer = consultation.getLawyer();
+        this.client = consultation.getClient();
+    }
+
 }

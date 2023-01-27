@@ -1,7 +1,6 @@
 package com.solvd.course.lawoffice.service.impl;
 
 import com.solvd.course.lawoffice.domain.consultation.Consultation;
-import com.solvd.course.lawoffice.domain.consultation.ValidationException;
 import com.solvd.course.lawoffice.domain.criteria.ConsultationCriteria;
 import com.solvd.course.lawoffice.domain.exception.ResourceDoesNotExistException;
 import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
@@ -56,9 +55,6 @@ public class ConsultationServiceImpl implements ConsultationService {
     }
 
     private void validate(Consultation consultation) {
-        if (Objects.nonNull(consultation.getClient()) && Objects.isNull(consultation.getClient().getUserId())) {
-            throw new ValidationException("Validation error", "consultation.client.userId", "Client's id cannot be null");
-        }
         ConsultationCriteria criteria = new ConsultationCriteria();
         criteria.setVisitTime(consultation.getVisitTime());
         criteria.setLawyerId(consultation.getLawyer().getLawyerId());

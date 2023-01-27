@@ -1,6 +1,5 @@
 package com.solvd.course.lawoffice.web.controller.exception;
 
-import com.solvd.course.lawoffice.domain.consultation.ValidationException;
 import com.solvd.course.lawoffice.domain.exception.ResourceDoesNotExistException;
 import com.solvd.course.lawoffice.domain.exception.UniqueConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,13 +28,6 @@ public class ExceptionHandling {
                                 fieldError.getObjectName() + "." + fieldError.getField(), fieldError.getDefaultMessage()))
                 .collect(Collectors.toList());
         return new ExceptionBody("Binding errors", bindingErrors);
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handleValidationException(ValidationException ex) {
-        BindingError bindingError = new BindingError(ex.getField(), ex.getFieldMessage());
-        return new ExceptionBody(ex.getMessage(), Collections.singletonList(bindingError));
     }
 
     @ExceptionHandler(ResourceDoesNotExistException.class)
