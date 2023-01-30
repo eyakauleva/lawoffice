@@ -3,8 +3,9 @@ services:
     build: .
     ports:
       - 8080:8080
+    env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_container:5432/postgres?currentSchema=law_office_schema
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_DOCKER}
     depends_on:
       postgres_container:
         condition: service_healthy
@@ -12,9 +13,10 @@ services:
     image: "postgres:15.1-alpine"
     volumes:
       - dbdata:/var/lib/postgres/data
+    env_file: .env
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: system
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 15s
