@@ -19,4 +19,4 @@ jobs:
     - name: Build Docker image
       run: docker build . --file Dockerfile --tag $REPO_NAME:$(date +%s)
     - name: Push image to Docker.io
-      run: docker push $DOCKER_USER/$REPO_NAME
+      run: docker push $DOCKER_USER/$REPO_NAME:latest
