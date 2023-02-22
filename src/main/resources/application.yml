@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: ${SPRING_DATASOURCE_URL_LOCALHOST}
+    url: ${POSTGRES_URL}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
   jackson:
@@ -15,7 +15,7 @@ mybatis:
   mapper-locations: "classpath:mapper/**/*-mapper.xml"
 
 jwt:
-  secret: solvd-lawoffice-security
+  secret: ${JWT_SECRET}
   expirationTimeInSec: 1800
   ableForRefreshTimeInSec: 1000
 
