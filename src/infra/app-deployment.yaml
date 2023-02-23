@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: lawoffice
-          image: eyakauleva/lawoffice:2023-02-22--53-47
+          image: eyakauleva/lawoffice:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
