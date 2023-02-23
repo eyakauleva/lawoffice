@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+
     - name: Log in to Docker.io
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    - name: Get current datetime
-      id: datetime
-      run: echo "::set-output name=datetime::$(date +'%Y-%m-%d--%M-%S')"
+
     - name: Build Docker image
-      run: docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{steps.datetime.outputs.datetime}}
+      run: docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:latest
+
     - name: Push image to Docker.io
-      run: docker push $DOCKER_USER/$REPO_NAME:${{steps.datetime.outputs.datetime}}
+      run: docker push $DOCKER_USER/$REPO_NAME:latest
