@@ -5,7 +5,7 @@ services:
       - 8080:8080
     env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: ${POSTGRES_URL_DOCKER}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${POSTGRES_DOMAIN_DOCKER}:5432/postgres?currentSchema=law_office_schema
     depends_on:
       postgres_container:
         condition: service_healthy

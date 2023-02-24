@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: ${POSTGRES_URL}
+    url: jdbc:postgresql://${POSTGRES_DOMAIN}:5432/postgres?currentSchema=law_office_schema
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
   jackson:
