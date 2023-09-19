@@ -11,6 +11,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Affair {
 
+    public void check() {
+
+    }
+
     private Long id;
     private User client;
     private String name;
